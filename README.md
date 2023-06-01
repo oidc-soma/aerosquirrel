@@ -5,3 +5,11 @@
 ## 기여 가이드
 
 [CONTRIBUTING.md](./CONTRIBUTING.md)를 참고해주세요.
+
+## 백엔드 가이드
+
+### 기술 스택
+
+- CMD: [Cobra](https://github.com/spf13/cobra)
+- Server: [Gin](https://github.com/gin-gonic/gin)
+- DB: [MongoDB Go Driver](https://github.com/mongodb/mongo-go-driver)
