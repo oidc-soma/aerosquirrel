@@ -1,1 +1,0 @@
-// Banner Typescript file
