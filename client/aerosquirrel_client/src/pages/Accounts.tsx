@@ -12,11 +12,10 @@ left: 8rem;
 top: 1rem;
 
     font-size: 20px;
-`
+`;
+
 const AddAccountButton = 
 "position: absolute; right: 5rem; top: 4rem;";
-
-
 
 function Accounts() {
   // Global App Context 정의 예정
