@@ -2,6 +2,7 @@ import React from 'react';
 import Cards from '../components/cards/Cards';
 import './Dashboard.css';
 import styled from 'styled-components';
+import ReactDOM from 'react-dom';
 
 const DashboardLabel = styled.h1`
   position: absolute;
@@ -13,7 +14,14 @@ const DashboardLabel = styled.h1`
 
 
 function Dashboard() {
-    
+    const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
+
+    if(!DocumentTitle)
+    {
+        throw new Error('No document title error');
+    }
+    DocumentTitle.innerText = "Dashboard - Aerosquirrel";
+
     return (
       <>
       <DashboardLabel>Dashboard</DashboardLabel>

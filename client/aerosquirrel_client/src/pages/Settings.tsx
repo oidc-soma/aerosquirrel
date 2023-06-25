@@ -45,6 +45,16 @@ const UserBillLine = styled.div`
 `
 
 function Settings() {
+
+      const DocumentTitle: HTMLTitleElement | null =
+        document.querySelector("title");
+
+      if (!DocumentTitle) {
+        throw new Error("No document title error");
+      }
+      DocumentTitle.innerText = "Settings - Aerosquirrel";
+
+
     return(
         <>
         <SettingsLabel>Settings</SettingsLabel>

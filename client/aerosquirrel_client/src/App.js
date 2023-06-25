@@ -14,7 +14,7 @@ function App() {
       <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Accounts />}></Route>
+        <Route path="/" title="Dashboard - Aerosqirrel" element={<Accounts />}></Route>
         <Route path="/accounts/*" element={<Accounts />}></Route>
         <Route path="/inventory/*" element={<Inventory />}></Route>
         <Route path="/dashboard/*" element={<Dashboard />}></Route>

@@ -18,7 +18,13 @@ const AddAccountButton =
 "position: absolute; right: 5rem; top: 4rem;";
 
 function Accounts() {
-  // Global App Context 정의 예정
+  const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
+
+    if (!DocumentTitle) {
+      throw new Error("No document title error");
+    }
+    DocumentTitle.innerText = "Accounts - Aerosquirrel";
+
 
   return (
     <>
