@@ -54,7 +54,6 @@ function Settings() {
       }
       DocumentTitle.innerText = "Settings - Aerosquirrel";
 
-
     return(
         <>
         <SettingsLabel>Settings</SettingsLabel>
