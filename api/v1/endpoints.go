@@ -13,15 +13,19 @@ func Endpoints(ctx context.Context) *gin.Engine {
 	router := gin.New()
 	router.Use(cors.Default())
 
-	api := handlers.NewApiHandler(ctx)
+	apiHandler := handlers.NewApiHandler(ctx)
 
-	router.GET("/resources", api.GetResources)
+	v1 := router.Group("/api/v1")
+	{
+		v1.GET("/resources", apiHandler.GetResources)
+		v1.POST("/users", apiHandler.CreateUser)
 
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "ok",
+		v1.GET("/health", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{
+				"status": "ok",
+			})
 		})
-	})
+	}
 
 	return router
 }
