@@ -55,3 +55,13 @@ func (h *ApiHandler) GetAllResources(c *gin.Context) {
 
 	c.JSON(http.StatusOK, resources)
 }
+
+func (h *ApiHandler) GetOneResource(c *gin.Context) {
+	resource, err := h.db.FindOneResource(context.Background(), c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resource)
+}

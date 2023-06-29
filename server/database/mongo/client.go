@@ -67,3 +67,19 @@ func (m *Client) FindAllResources(ctx context.Context) ([]*models.Resource, erro
 
 	return resources, nil
 }
+
+func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resource, error) {
+	var resource *models.Resource
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = m.client.Database("aerosquirrel").Collection("resources").FindOne(ctx, bson.M{"_id": objectId}).Decode(&resource)
+	if err != nil {
+		return nil, err
+	}
+
+	return resource, nil
+}
