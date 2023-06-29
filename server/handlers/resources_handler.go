@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	database "github.com/oidc-soma/aerosquirrel/server/database/mongo"
+	"github.com/oidc-soma/aerosquirrel/server/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +24,22 @@ func NewApiHandler(ctx context.Context) *ApiHandler {
 	return &ApiHandler{
 		ctx: ctx,
 		db:  db,
+	}
+}
+
+func (h *ApiHandler) CreateResource(c *gin.Context) {
+	var resource models.Resource
+
+	err := json.NewDecoder(c.Request.Body).Decode(&resource)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = h.db.CreateResource(context.Background(), &resource)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 }
 

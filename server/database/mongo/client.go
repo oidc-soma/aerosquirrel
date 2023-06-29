@@ -39,3 +39,14 @@ func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
 
 	return nil
 }
+
+func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) error {
+	res, err := m.client.Database("aerosquirrel").Collection("resources").InsertOne(ctx, resource)
+	if err != nil {
+		return err
+	}
+
+	resource.Id = res.InsertedID.(primitive.ObjectID)
+
+	return nil
+}
