@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -49,4 +50,20 @@ func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) 
 	resource.Id = res.InsertedID.(primitive.ObjectID)
 
 	return nil
+}
+
+func (m *Client) FindAllResources(ctx context.Context) ([]*models.Resource, error) {
+	var resources []*models.Resource
+
+	cursor, err := m.client.Database("aerosquirrel").Collection("resources").Find(ctx, bson.D{{}})
+	if err != nil {
+		return nil, err
+	}
+
+	err = cursor.All(ctx, &resources)
+	if err != nil {
+		return nil, err
+	}
+
+	return resources, nil
 }

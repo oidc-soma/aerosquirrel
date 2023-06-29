@@ -41,10 +41,17 @@ func (h *ApiHandler) CreateResource(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	c.JSON(http.StatusCreated, resource)
 }
 
-func (h *ApiHandler) GetResources(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"resources": "test",
-	})
+func (h *ApiHandler) GetAllResources(c *gin.Context) {
+
+	resources, err := h.db.FindAllResources(context.Background())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resources)
 }
