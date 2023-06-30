@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	database "github.com/oidc-soma/aerosquirrel/server/database/mongo"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -63,6 +64,27 @@ func (h *ApiHandler) GetOneResource(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusOK, resource)
+}
+
+func (h *ApiHandler) UpdateOneResource(c *gin.Context) {
+	var resource models.Resource
+	var objectId *primitive.ObjectID
+	id := c.Param("id")
+
+	err := json.NewDecoder(c.Request.Body).Decode(&resource)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	objectId, err = h.db.UpdateOneResource(context.Background(), id, &resource)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	resource.Id = *objectId
 	c.JSON(http.StatusOK, resource)
 }
 

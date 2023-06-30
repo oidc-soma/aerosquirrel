@@ -84,6 +84,20 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 	return resource, nil
 }
 
+func (m *Client) UpdateOneResource(ctx context.Context, id string, resource *models.Resource) (*primitive.ObjectID, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = m.client.Database("aerosquirrel").Collection("resources").UpdateOne(ctx, bson.M{"_id": objectId}, bson.M{"$set": resource})
+	if err != nil {
+		return nil, err
+	}
+
+	return &objectId, nil
+}
+
 func (m *Client) DeleteOneResource(ctx context.Context, id string) error {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
