@@ -1,5 +1,7 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
+import { ReactComponent as AWS } from '../../AWS.svg';
+import { ReactComponent as Oracle} from '../../Oracle.svg';
 
 type CardsProps = {
     HeaderTitle: string,
@@ -10,22 +12,48 @@ type CardsProps = {
 function Cards({HeaderTitle, SecondaryTitle, Content}:CardsProps) {
 
 
-
-return (
-    <Card border="info">
+if(Content==="AWS")
+{
+    return (
+      <Card border="info">
         <Card.Header>{HeaderTitle}</Card.Header>
         <Card.Body>
-            <Card.Title>{SecondaryTitle}</Card.Title>
-            <Card.Text>
-                {Content}
-            </Card.Text>
+          <Card.Title>
+            <AWS></AWS>
+          </Card.Title>
+          <Card.Text>{SecondaryTitle}</Card.Text>
         </Card.Body>
+      </Card>
+    );
+
+}else if(Content==="Oracle"){
+  return (
+    <Card border="info">
+      <Card.Header>{HeaderTitle}</Card.Header>
+      <Card.Body>
+        <Card.Title>
+          <Oracle></Oracle>
+        </Card.Title>
+        <Card.Text>{SecondaryTitle}</Card.Text>
+      </Card.Body>
     </Card>
+  );
 
 
-
-
+}
+else{
+return (
+  <Card border="info">
+    <Card.Header>{HeaderTitle}</Card.Header>
+    <Card.Body>
+      <Card.Title>{SecondaryTitle}</Card.Title>
+      <Card.Text>{"Other"}</Card.Text>
+    </Card.Body>
+  </Card>
 );
+
+}
+
 
 
 

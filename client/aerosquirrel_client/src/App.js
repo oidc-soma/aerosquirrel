@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Inventory from './pages/Inventory';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import AddAccount from './pages/AddAccount';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/inventory/*" element={<Inventory />}></Route>
         <Route path="/dashboard/*" element={<Dashboard />}></Route>
         <Route path="/settings/*" element={<Settings />}></Route>
+        <Route path="/test/addacc" element={<AddAccount />}></Route>
       </Routes>
       </BrowserRouter>
     </div>

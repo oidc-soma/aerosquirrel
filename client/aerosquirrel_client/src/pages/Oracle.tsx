@@ -1,7 +1,13 @@
 import React from "react";
 
 function OracleDetail() {
-  return <></>;
+  return (
+    <>
+        <div>
+          
+        </div>
+    </>
+  );
 }
 
 export default OracleDetail;
