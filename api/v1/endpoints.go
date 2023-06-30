@@ -20,6 +20,7 @@ func Endpoints(ctx context.Context) *gin.Engine {
 		v1.POST("/resources", apiHandler.CreateResource)
 		v1.GET("/resources", apiHandler.GetAllResources)
 		v1.GET("/resources/:id", apiHandler.GetOneResource)
+		v1.DELETE("/resources/:id", apiHandler.DeleteOneResource)
 		v1.POST("/users", apiHandler.CreateUser)
 
 		v1.GET("/health", func(c *gin.Context) {

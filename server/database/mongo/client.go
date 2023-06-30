@@ -83,3 +83,17 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 
 	return resource, nil
 }
+
+func (m *Client) DeleteOneResource(ctx context.Context, id string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = m.client.Database("aerosquirrel").Collection("resources").DeleteOne(ctx, bson.M{"_id": objectId})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
