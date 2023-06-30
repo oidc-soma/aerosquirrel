@@ -84,6 +84,22 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 	return resource, nil
 }
 
+func (m *Client) FindMultipleResources(ctx context.Context, tags []models.Tag) ([]*models.Resource, error) {
+	var resources []*models.Resource
+
+	cursor, err := m.client.Database("aerosquirrel").Collection("resources").Find(ctx, bson.D{{"tags", bson.D{{"$all", tags}}}})
+	if err != nil {
+		return nil, err
+	}
+
+	err = cursor.All(ctx, &resources)
+	if err != nil {
+		return nil, err
+	}
+
+	return resources, nil
+}
+
 func (m *Client) UpdateOneResource(ctx context.Context, id string, resource *models.Resource) (*primitive.ObjectID, error) {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {

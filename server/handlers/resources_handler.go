@@ -46,9 +46,20 @@ func (h *ApiHandler) CreateResource(c *gin.Context) {
 	c.JSON(http.StatusCreated, resource)
 }
 
-func (h *ApiHandler) GetAllResources(c *gin.Context) {
+func (h *ApiHandler) GetResources(c *gin.Context) {
+	var tags []models.Tag
+	var resources []*models.Resource
+	var err error
 
-	resources, err := h.db.FindAllResources(context.Background())
+	query := c.Request.URL.Query()
+	if len(query) == 0 {
+		resources, err = h.db.FindAllResources(context.Background())
+	} else {
+		for key, values := range query {
+			tags = append(tags, models.Tag{Key: key, Value: values[0]})
+		}
+		resources, err = h.db.FindMultipleResources(context.Background(), tags)
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

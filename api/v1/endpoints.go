@@ -18,7 +18,7 @@ func Endpoints(ctx context.Context) *gin.Engine {
 	v1 := router.Group("/api/v1")
 	{
 		v1.POST("/resources", apiHandler.CreateResource)
-		v1.GET("/resources", apiHandler.GetAllResources)
+		v1.GET("/resources", apiHandler.GetResources)
 		v1.GET("/resources/:id", apiHandler.GetOneResource)
 		v1.PATCH("/resources/:id", apiHandler.UpdateOneResource)
 		v1.DELETE("/resources/:id", apiHandler.DeleteOneResource)
