@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link, Route } from "react-router-dom";
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Cards from '../components/cards/Cards';
 import './Accounts.css';
 import CloudProvider from "../components/cards/CloudProvider";
+import AddAccount from "./AddAccount";
 
 const AccountsLabel = styled.h1`
 position: absolute;
@@ -19,6 +20,16 @@ const AddAccountButton =
 "position: absolute; right: 5rem; top: 4rem;";
 
 function Accounts() {
+  const [showAddPopup, setshowAddPopup] = useState(false);
+  
+  const showPopupFunction = () => {
+    setshowAddPopup(true);
+  }
+
+  const closePopupFunction = () => {
+    setshowAddPopup(false);
+  };
+
   const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
 
     if (!DocumentTitle) {
@@ -33,10 +44,10 @@ function Accounts() {
       <Button
         variant="outline-primary"
         style={{ position: "absolute", right: "5rem", top: "4rem" }}
-      >
+        onClick={showPopupFunction}>
         Add New Account
       </Button>
-
+      {showAddPopup&&<AddAccount closePopup={closePopupFunction}/>}
       {/* <Cards
         HeaderTitle="Amazon Web Services"
         SecondaryTitle="AWS"
