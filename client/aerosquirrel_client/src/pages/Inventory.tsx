@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import InventoryLists from './InventoryLists';
 
 const InventoryLabel = styled.h1`
   position: absolute;
@@ -14,7 +15,7 @@ function Inventory() {
     return(
         <>
             <InventoryLabel>Inventory</InventoryLabel>
-
+            <InventoryLists />
         </>
     );
 
