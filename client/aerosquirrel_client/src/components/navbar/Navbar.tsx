@@ -6,9 +6,10 @@ import styled from "styled-components"
    position: absolute;
    background-color: #262626;
    width: 88px;
-   height: 100%;
+   height: 100vh;
    overflow: hidden;
    overscroll-behavior: contain;
+   min-height: 100vh;
  `;
  
 

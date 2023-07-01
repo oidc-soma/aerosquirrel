@@ -7,7 +7,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Inventory from './pages/Inventory';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import styled from 'styled-components';
 import AddAccount from './pages/AddAccount';
+
+
 
 function App() {
   return (

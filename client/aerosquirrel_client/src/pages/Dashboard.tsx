@@ -54,9 +54,9 @@ function Dashboard() {
           />{" "}
           <DashboardUpperCards
             key={1}
-            HeaderTitle="Bill"
+            HeaderTitle="Bills"
             SecondaryTitle="0"
-            Content="Users"
+            Content="Bills"
           />
         </div>
         <div
@@ -67,14 +67,7 @@ function Dashboard() {
             paddingRight: "5rem",
           }}
         >
-          {[...Array(2)].map((_, i) => (
-            <Cards
-              key={i}
-              HeaderTitle="Cloud"
-              SecondaryTitle="Cost Info"
-              Content="Dashboard"
-            />
-          ))}
+          
         </div>
         <div
           className="costexplorerGrid"
@@ -84,12 +77,7 @@ function Dashboard() {
             paddingRight: "5rem",
           }}
         >
-          <Cards
-            key={0}
-            HeaderTitle="Cloud"
-            SecondaryTitle="Cost Info"
-            Content="Dashboard"
-          />
+          
         </div>
       </>
     );

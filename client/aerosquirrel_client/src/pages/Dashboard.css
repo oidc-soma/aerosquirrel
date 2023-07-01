@@ -5,13 +5,18 @@
 }
 
 .mapchartGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
+    
+    border-radius: 10px;
+    box-shadow: 10px 10px 30px grey;
+    margin-top: 2rem;
+    margin-right: 5rem;
+    height: 200px;
 }
 
 .costexplorerGrid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-gap: 20px;
+    border-radius: 10px;
+        box-shadow: 10px 10px 30px grey;
+        margin-top: 2rem;
+        margin-right: 5rem;
+        height: 200px;
 }
