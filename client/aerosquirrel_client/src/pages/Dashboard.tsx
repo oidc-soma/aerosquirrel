@@ -3,6 +3,7 @@ import Cards from '../components/cards/Cards';
 import './Dashboard.css';
 import styled from 'styled-components';
 import ReactDOM from 'react-dom';
+import DashboardUpperCards from '../components/cards/DashboardUpperCards';
 
 const DashboardLabel = styled.h1`
   position: absolute;
@@ -24,7 +25,7 @@ function Dashboard() {
 
     return (
       <>
-      <DashboardLabel>Dashboard</DashboardLabel>
+        <DashboardLabel>Dashboard</DashboardLabel>
         <div
           className="dashboardGrid"
           style={{
@@ -33,14 +34,30 @@ function Dashboard() {
             paddingRight: "5rem",
           }}
         >
-          {[...Array(4)].map((_, i) => (
-            <Cards
-              key={i}
-              HeaderTitle="Cloud"
-              SecondaryTitle="Information"
-              Content="Dashboard"
-            />
-          ))}
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Users"
+            SecondaryTitle="0"
+            Content="Users"
+          />
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Regions"
+            SecondaryTitle="0"
+            Content="Regions"
+          />
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Resources"
+            SecondaryTitle="0"
+            Content="Resources"
+          />{" "}
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Bill"
+            SecondaryTitle="0"
+            Content="Users"
+          />
         </div>
         <div
           className="mapchartGrid"

@@ -20,7 +20,6 @@ function App() {
         <Route path="/inventory/*" element={<Inventory />}></Route>
         <Route path="/dashboard/*" element={<Dashboard />}></Route>
         <Route path="/settings/*" element={<Settings />}></Route>
-        <Route path="/test/addacc" element={<AddAccount />}></Route>
       </Routes>
       </BrowserRouter>
     </div>
