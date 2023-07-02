@@ -1,0 +1,42 @@
+.dashboardGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
+.mapchartGrid {
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 10px 10px 30px grey;
+    margin-top: 2rem;
+    margin-right: 5rem;
+    height: 300px;
+}
+
+.costexplorerGrid {
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 10px 10px 30px grey;
+    margin-top: 2rem;
+    margin-right: 5rem;
+    height: 300px;
+    margin-bottom : 3rem;
+}
+
+.DashboardTitle{
+    position: absolute;
+    left: 8rem;
+    top: 1rem;
+    font-size: 20px;
+}
+
+.mcb-label {
+    position: absolute;
+    left: 30px;
+    top: 23px;
+    
+}
+
+.dashboardscreen{
+    position: relative;
+}
