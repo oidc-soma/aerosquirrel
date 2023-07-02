@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -36,6 +37,93 @@ func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
 	}
 
 	user.Id = res.InsertedID.(primitive.ObjectID)
+
+	return nil
+}
+
+func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) error {
+	res, err := m.client.Database("aerosquirrel").Collection("resources").InsertOne(ctx, resource)
+	if err != nil {
+		return err
+	}
+
+	resource.Id = res.InsertedID.(primitive.ObjectID)
+
+	return nil
+}
+
+func (m *Client) FindAllResources(ctx context.Context) ([]*models.Resource, error) {
+	var resources []*models.Resource
+
+	cursor, err := m.client.Database("aerosquirrel").Collection("resources").Find(ctx, bson.D{{}})
+	if err != nil {
+		return nil, err
+	}
+
+	err = cursor.All(ctx, &resources)
+	if err != nil {
+		return nil, err
+	}
+
+	return resources, nil
+}
+
+func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resource, error) {
+	var resource *models.Resource
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = m.client.Database("aerosquirrel").Collection("resources").FindOne(ctx, bson.M{"_id": objectId}).Decode(&resource)
+	if err != nil {
+		return nil, err
+	}
+
+	return resource, nil
+}
+
+func (m *Client) FindMultipleResources(ctx context.Context, tags []models.Tag) ([]*models.Resource, error) {
+	var resources []*models.Resource
+
+	cursor, err := m.client.Database("aerosquirrel").Collection("resources").Find(ctx, bson.D{{"tags", bson.D{{"$all", tags}}}})
+	if err != nil {
+		return nil, err
+	}
+
+	err = cursor.All(ctx, &resources)
+	if err != nil {
+		return nil, err
+	}
+
+	return resources, nil
+}
+
+func (m *Client) UpdateOneResource(ctx context.Context, id string, resource *models.Resource) (*primitive.ObjectID, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = m.client.Database("aerosquirrel").Collection("resources").UpdateOne(ctx, bson.M{"_id": objectId}, bson.M{"$set": resource})
+	if err != nil {
+		return nil, err
+	}
+
+	return &objectId, nil
+}
+
+func (m *Client) DeleteOneResource(ctx context.Context, id string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = m.client.Database("aerosquirrel").Collection("resources").DeleteOne(ctx, bson.M{"_id": objectId})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
