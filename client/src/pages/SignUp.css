@@ -1,3 +1,25 @@
+@keyframes horizontal-shaking {
+    0% {
+        transform: translateX(0)
+    }
+
+    25% {
+        transform: translateX(2px)
+    }
+
+    50% {
+        transform: translateX(-2px)
+    }
+
+    75% {
+        transform: translateX(2px)
+    }
+
+    100% {
+        transform: translateX(0)
+    }
+}
+
 .signupformouter{
     position: relative;
     top: 3rem;
@@ -21,4 +43,10 @@
     position: absolute;
     left: 100px;
     top: 0px;
+}
+
+.Errcaption {
+    color: red;
+    font-size: 10pt;
+    text-align: end;
 }
