@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import styled from 'styled-components';
 import AddAccount from './pages/AddAccount';
+import SignUp from './pages/SignUp';
 
 
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/inventory/*" element={<Inventory />}></Route>
         <Route path="/dashboard/*" element={<Dashboard />}></Route>
         <Route path="/settings/*" element={<Settings />}></Route>
+        <Route path="/signup/*" element={<SignUp />}></Route>
       </Routes>
       </BrowserRouter>
     </div>
