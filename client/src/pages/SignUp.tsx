@@ -30,10 +30,9 @@ function SignUp() {
         <br />
         <Form>
           <Form.Group controlId="signupForm.ControlInput">
-            <Form.Control type="text" placeholder="Username"></Form.Control>
-            {isUsernameexist ? null : (
-              <div className="Errcaption">Please input username</div>
-            )}
+            <Form.Control type="text" placeholder="Username" onClick={()=>{setUsernameclicked(true);}} onChange={(e) => {if(e.target.value!==null&&e.target.value!==''){setUsernameexist(true);} else if(e.target.value===null||e.target.value===''){setUsernameexist(false);}}}></Form.Control>
+            {isUsernameclicked&&!isUsernameexist ? <div className="Errcaption">Please input username</div>: null
+                }
             <br />
             <Form.Control type="email" placeholder="Email"></Form.Control>
             {isEmailexist ? null : (
