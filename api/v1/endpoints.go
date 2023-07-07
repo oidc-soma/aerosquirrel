@@ -16,17 +16,20 @@ func Endpoints(ctx context.Context) *gin.Engine {
 
 	apiHandler := handlers.NewApiHandler(ctx)
 
+	v1Public := router.Group("/api/v1")
+	{
+		v1Public.POST("/users", apiHandler.CreateUser)
+		v1Public.POST("/login", apiHandler.Login)
+	}
+
 	v1 := router.Group("/api/v1")
 	v1.Use(middleware.TokenAuth)
-	v1.Use()
 	{
 		v1.POST("/resources", apiHandler.CreateResource)
 		v1.GET("/resources", apiHandler.GetResources)
 		v1.GET("/resources/:id", apiHandler.GetOneResource)
 		v1.PATCH("/resources/:id", apiHandler.UpdateOneResource)
 		v1.DELETE("/resources/:id", apiHandler.DeleteOneResource)
-		v1.POST("/users", apiHandler.CreateUser)
-		v1.POST("/login", apiHandler.Login)
 
 		v1.GET("/health", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{

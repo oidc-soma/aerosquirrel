@@ -7,6 +7,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/oidc-soma/aerosquirrel/server/middleware"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"github.com/oidc-soma/aerosquirrel/server/utils"
 	"net/http"
 	"time"
 )
@@ -19,6 +20,12 @@ func (h *ApiHandler) CreateUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	hashedPassword, err := utils.HashedPassword(user.Password)
+	if err != nil {
+		return
+	}
+	user.Password = hashedPassword
 
 	err = h.db.CreateUser(context.Background(), &user)
 	if err != nil {
@@ -43,9 +50,10 @@ func (h *ApiHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	expectedPassword := actualUser.Password
+	hashedPassword := actualUser.Password
 
-	if expectedPassword != user.Password {
+	err = utils.CompareHashAndPassword(hashedPassword, user.Password);
+	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
 		return
 	}
@@ -65,6 +73,7 @@ func (h *ApiHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.Header("Authorization", "Bearer "+tokenString)
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, struct {
+		Token string `json:"token"`
+	}{Token: tokenString})
 }

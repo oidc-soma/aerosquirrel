@@ -44,7 +44,7 @@ func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
 func (m *Client) FindUserByUsername(ctx context.Context, username string) (*models.User, error) {
 	var user *models.User
 
-	err := m.client.Database("aerosquirrel").Collection("resources").FindOne(ctx, bson.M{"username": username}).Decode(&user)
+	err := m.client.Database("aerosquirrel").Collection("users").FindOne(ctx, bson.M{"username": username}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
