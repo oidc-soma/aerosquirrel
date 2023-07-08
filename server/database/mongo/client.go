@@ -41,6 +41,17 @@ func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
 	return nil
 }
 
+func (m *Client) FindUserByUsername(ctx context.Context, username string) (*models.User, error) {
+	var user *models.User
+
+	err := m.client.Database("aerosquirrel").Collection("users").FindOne(ctx, bson.M{"username": username}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) error {
 	res, err := m.client.Database("aerosquirrel").Collection("resources").InsertOne(ctx, resource)
 	if err != nil {
