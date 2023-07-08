@@ -55,6 +55,7 @@ func (h *ApiHandler) Login(c *gin.Context) {
 	hashedPassword := actualUser.Password
 
 	err = utils.CompareHashAndPassword(hashedPassword, user.Password)
+
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
 		return
