@@ -2,11 +2,19 @@ package database
 
 import (
 	"context"
+
 	"github.com/oidc-soma/aerosquirrel/server/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+const (
+	AeroSquirrelDatabase = "aerosquirrel"
+
+	UserCollection     = "users"
+	ResourceCollection = "resources"
 )
 
 type Client struct {
@@ -31,7 +39,7 @@ func Close(ctx context.Context, m *Client) error {
 }
 
 func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
-	res, err := m.client.Database("aerosquirrel").Collection("users").InsertOne(ctx, user)
+	res, err := m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).InsertOne(ctx, user)
 	if err != nil {
 		return err
 	}
@@ -52,8 +60,52 @@ func (m *Client) FindUserByUsername(ctx context.Context, username string) (*mode
 	return user, nil
 }
 
+func (m *Client) FindUser(ctx context.Context, id string) (*models.User, error) {
+	var user *models.User
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).FindOne(ctx, bson.M{"_id": objectId}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (m *Client) UpdateUser(ctx context.Context, id string, user *models.User) (*primitive.ObjectID, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).UpdateOne(ctx, bson.M{"_id": objectId}, bson.M{"$set": user})
+	if err != nil {
+		return nil, err
+	}
+
+	return &objectId, nil
+}
+
+func (m *Client) DeleteUser(ctx context.Context, id string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).DeleteOne(ctx, bson.M{"_id": objectId})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) error {
-	res, err := m.client.Database("aerosquirrel").Collection("resources").InsertOne(ctx, resource)
+	res, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).InsertOne(ctx, resource)
 	if err != nil {
 		return err
 	}
@@ -66,7 +118,7 @@ func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) 
 func (m *Client) FindAllResources(ctx context.Context) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
-	cursor, err := m.client.Database("aerosquirrel").Collection("resources").Find(ctx, bson.D{{}})
+	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).Find(ctx, bson.D{{}})
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +139,7 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 		return nil, err
 	}
 
-	err = m.client.Database("aerosquirrel").Collection("resources").FindOne(ctx, bson.M{"_id": objectId}).Decode(&resource)
+	err = m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).FindOne(ctx, bson.M{"_id": objectId}).Decode(&resource)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +150,7 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 func (m *Client) FindMultipleResources(ctx context.Context, tags []models.Tag) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
-	cursor, err := m.client.Database("aerosquirrel").Collection("resources").Find(ctx, bson.D{{"tags", bson.D{{"$all", tags}}}})
+	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).Find(ctx, bson.D{{"tags", bson.D{{"$all", tags}}}})
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +169,7 @@ func (m *Client) UpdateOneResource(ctx context.Context, id string, resource *mod
 		return nil, err
 	}
 
-	_, err = m.client.Database("aerosquirrel").Collection("resources").UpdateOne(ctx, bson.M{"_id": objectId}, bson.M{"$set": resource})
+	_, err = m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).UpdateOne(ctx, bson.M{"_id": objectId}, bson.M{"$set": resource})
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +183,7 @@ func (m *Client) DeleteOneResource(ctx context.Context, id string) error {
 		return err
 	}
 
-	_, err = m.client.Database("aerosquirrel").Collection("resources").DeleteOne(ctx, bson.M{"_id": objectId})
+	_, err = m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).DeleteOne(ctx, bson.M{"_id": objectId})
 	if err != nil {
 		return err
 	}

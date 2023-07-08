@@ -25,6 +25,10 @@ func Endpoints(ctx context.Context) *gin.Engine {
 	v1 := router.Group("/api/v1")
 	v1.Use(middleware.TokenAuth)
 	{
+		v1.GET("/users/:id", apiHandler.GetUser)
+		v1.PATCH("/users/:id", apiHandler.UpdateUser)
+		v1.DELETE("/users/:id", apiHandler.DeleteUser)
+
 		v1.POST("/resources", apiHandler.CreateResource)
 		v1.GET("/resources", apiHandler.GetResources)
 		v1.GET("/resources/:id", apiHandler.GetOneResource)
