@@ -10,7 +10,7 @@ import Settings from './pages/Settings';
 import styled from 'styled-components';
 import AddAccount from './pages/AddAccount';
 import SignUp from './pages/SignUp';
-
+import Drawer from './pages/Drawer';
 
 
 function App() {
@@ -25,6 +25,7 @@ function App() {
         <Route path="/dashboard/*" element={<Dashboard />}></Route>
         <Route path="/settings/*" element={<Settings />}></Route>
         <Route path="/signup/*" element={<SignUp />}></Route>
+        <Route path="/drawer/*" element={<Drawer />}></Route>
       </Routes>
       </BrowserRouter>
     </div>
