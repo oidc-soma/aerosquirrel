@@ -52,7 +52,7 @@ func (h *ApiHandler) GetResources(c *gin.Context) {
 	var resources []*models.Resource
 	var err error
 
-	resources, err = h.db.FindAllResources(context.Background())
+	resources, err = h.db.FindAllResourcesByTeamId(context.Background(), c.Query("teamId"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -77,6 +77,12 @@ func (h *ApiHandler) GetResourcesByFilter(c *gin.Context) {
 	caser := cases.Title(language.AmericanEnglish)
 
 	err := json.NewDecoder(c.Request.Body).Decode(&filters)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := h.GetCurrentUser(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -110,7 +116,7 @@ func (h *ApiHandler) GetResourcesByFilter(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid operator"})
 		}
 	}
-	resources, err = h.db.FindMultipleResources(context.Background(), filters)
+	resources, err = h.db.FindMultipleResources(context.Background(), user.TeamId, filters)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -128,6 +134,46 @@ func (h *ApiHandler) UpdateOneResource(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	existingResource, err := h.db.FindOneResource(context.Background(), id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if resource.TeamId.IsZero() {
+		resource.TeamId = existingResource.TeamId
+	}
+	if resource.Name == "" {
+		resource.Name = existingResource.Name
+	}
+	if resource.Type == "" {
+		resource.Type = existingResource.Type
+	}
+	if resource.Cost == 0 {
+		resource.Cost = existingResource.Cost
+	}
+	if resource.Metadata == nil {
+		resource.Metadata = existingResource.Metadata
+	}
+	if resource.Tags == nil {
+		resource.Tags = existingResource.Tags
+	}
+	if resource.Link == "" {
+		resource.Link = existingResource.Link
+	}
+	if resource.Provider == "" {
+		resource.Provider = existingResource.Provider
+	}
+	if resource.Region == "" {
+		resource.Region = existingResource.Region
+	}
+	if resource.Account == "" {
+		resource.Account = existingResource.Account
+	}
+	if resource.AccountId == "" {
+		resource.AccountId = existingResource.AccountId
 	}
 
 	objectId, err = h.db.UpdateOneResource(context.Background(), id, &resource)

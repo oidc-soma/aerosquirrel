@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"github.com/oidc-soma/aerosquirrel/server/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -224,10 +223,15 @@ func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) 
 	return nil
 }
 
-func (m *Client) FindAllResources(ctx context.Context) ([]*models.Resource, error) {
+func (m *Client) FindAllResourcesByTeamId(ctx context.Context, teamId string) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
-	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).Find(ctx, bson.D{{}})
+	objectId, err := primitive.ObjectIDFromHex(teamId)
+	if err != nil {
+		return nil, err
+	}
+
+	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).Find(ctx, bson.M{"teamId": objectId})
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +260,7 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 	return resource, nil
 }
 
-func (m *Client) FindMultipleResources(ctx context.Context, filters []models.Filter) ([]*models.Resource, error) {
+func (m *Client) FindMultipleResources(ctx context.Context, teamId primitive.ObjectID, filters []models.Filter) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
 	var bsonFilter bson.A
@@ -269,7 +273,7 @@ func (m *Client) FindMultipleResources(ctx context.Context, filters []models.Fil
 			bsonFilter = append(bsonFilter, bson.M{f.Field: bson.M{f.Operator: f.Value}})
 		}
 	}
-	fmt.Println(bsonFilter)
+	bsonFilter = append(bsonFilter, bson.M{"teamId": teamId})
 	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).Find(ctx, bson.M{"$and": bsonFilter})
 	if err != nil {
 		return nil, err
