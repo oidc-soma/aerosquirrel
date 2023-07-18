@@ -22,7 +22,11 @@ let client: yorkie.Client<yorkie.Indexable>;
 // Yorkie Document declaration
 let doc: yorkie.Document<yorkie.Indexable>;
 
-export function useMultiplayerState(roomId: string, { parentFunction }: any) {
+export function useMultiplayerState(
+  roomId: string,
+  { parentFunction }: any,
+  { appExport }: any
+) {
   const [app, setApp] = useState<TldrawApp>();
   const [loading, setLoading] = useState(true);
   //const [chRootValue, setchRootValue] = useState({});
@@ -35,6 +39,7 @@ export function useMultiplayerState(roomId: string, { parentFunction }: any) {
       app.setIsLoading(true);
       app.pause();
       setApp(app);
+      appExport(app);
       //parentFunction(app);
       const randomName = uniqueNamesGenerator({
         dictionaries: [names],
@@ -247,7 +252,7 @@ export function useMultiplayerState(roomId: string, { parentFunction }: any) {
       window.removeEventListener("beforeunload", handleDisconnect);
       stillAlive = false;
     };
-  }, [app, chRootValue]);
+  }, [app]);
 
   return {
     onMount,

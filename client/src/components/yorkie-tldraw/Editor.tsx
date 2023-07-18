@@ -15,6 +15,12 @@ import { useState, useCallback } from 'react';
 import { doc } from '../../hooks/useMultiplayerState';
 
 export default function Editor() {
+  const [AppRes, setAppRes] = useState<TldrawApp>();
+  const appExport = (app: TldrawApp) => {
+    setAppRes(app);
+  }
+
+
    const parentFunction = (x: any) => {
      console.log(x);
     //createShapes(x, 
@@ -22,13 +28,28 @@ export default function Editor() {
   const fileSystemEvents = useFileSystem();
   const { ...events } = useMultiplayerState(
     // `tldraw-${new Date().toISOString().substring(0, 10).replace(/-/g, "")}`
-    'tldraw-Savers', {parentFunction}
+    'tldraw-Savere', {parentFunction}, {appExport}
   );
+
+  const randomString = (length = 8) => {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let str = "";
+
+    for (let i = 0; i < length; i++) {
+      str += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    return str;
+  };
   const ButtonFunc = () => {
+    
+    
     doc.update((root) => {
-      root.shapes = {
-        "3df3c015-07dc-4b6d-2b97-15ab54d4ba41": {
-          id: "3df3c015-07dc-4b6d-2b97-15ab54d4ba41",
+      let Id = randomString(36);
+      root.shapes[Id] = {
+        
+          id: Id,
           type: "rectangle",
           name: "Rectangle",
           parentId: "page",
@@ -45,10 +66,34 @@ export default function Editor() {
           },
           label: "",
           labelPoint: [0.5, 0.5],
-        },
-      };
+        };
+
+
+
     })
-  }
+
+    
+      const root = doc.getRoot();
+
+      // Parse proxy object to record
+
+      const shapeRecord: Record<string, TDShape> = JSON.parse(
+        root.shapes.toJSON()
+      );
+
+      const bindingRecord: Record<string, TDBinding> = JSON.parse(
+        root.bindings.toJSON()
+      );
+      const assetRecord: Record<string, TDAsset> = JSON.parse(
+        root.assets.toJSON()
+      );
+  
+      // Replace page content with changed(propagated) records
+      //console.log("KORA" + root.shapes);
+      AppRes?.replacePageContent(shapeRecord, bindingRecord, assetRecord);
+    
+
+  };
   
  
 
