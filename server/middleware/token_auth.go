@@ -45,6 +45,7 @@ func TokenAuth(c *gin.Context) {
 		return
 	}
 
+	c.Set("userId", claims.Id)
 	c.Next()
 }
 

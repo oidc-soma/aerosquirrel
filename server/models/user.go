@@ -7,12 +7,14 @@ import (
 
 type User struct {
 	Id       primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	TeamId   primitive.ObjectID `json:"teamId" bson:"teamId"`
 	Username string             `json:"username" bson:"username"`
 	Email    string             `json:"email" bson:"email"`
 	Password string             `json:"password" bson:"password"`
 }
 
 type Claims struct {
-	Username string `json:"username"`
+	Id       primitive.ObjectID `json:"id"`
+	Username string             `json:"username"`
 	jwt.RegisteredClaims
 }

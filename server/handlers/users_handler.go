@@ -63,6 +63,7 @@ func (h *ApiHandler) Login(c *gin.Context) {
 
 	expirationTime := time.Now().Add(30 * 24 * time.Hour)
 	claims := &models.Claims{
+		Id:       actualUser.Id,
 		Username: user.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
@@ -81,10 +82,43 @@ func (h *ApiHandler) Login(c *gin.Context) {
 	}{Token: tokenString})
 }
 
-func (h *ApiHandler) GetUser(c *gin.Context) {
-	user, err := h.db.FindUser(context.Background(), c.Param("id"))
+func (h *ApiHandler) GetUsers(c *gin.Context) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "user id not found"})
+		return
+	}
+
+	user, err := h.db.FindUser(context.Background(), userId.(primitive.ObjectID).Hex())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	users, err := h.db.FindUsersByTeamId(context.Background(), user.TeamId.Hex())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
+func (h *ApiHandler) GetUser(c *gin.Context) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "user id not found"})
+		return
+	}
+
+	user, err := h.db.FindUser(context.Background(), c.Param("id"))
+	if err != nil && err.Error() != "mongo: no documents in result" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err = h.db.FindUser(context.Background(), userId.(primitive.ObjectID).Hex())
+	if err != nil {
 		return
 	}
 

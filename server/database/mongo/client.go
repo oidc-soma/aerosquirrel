@@ -13,6 +13,7 @@ import (
 const (
 	AeroSquirrelDatabase = "aerosquirrel"
 
+	TeamCollection     = "teams"
 	UserCollection     = "users"
 	ResourceCollection = "resources"
 )
@@ -38,6 +39,93 @@ func Close(ctx context.Context, m *Client) error {
 	return m.client.Disconnect(ctx)
 }
 
+func (m *Client) CreateTeam(ctx context.Context, team *models.Team) error {
+	res, err := m.client.Database(AeroSquirrelDatabase).Collection(TeamCollection).InsertOne(ctx, team)
+	if err != nil {
+		return err
+	}
+
+	team.Id = res.InsertedID.(primitive.ObjectID)
+
+	return nil
+}
+
+func (m *Client) FindTeams(ctx context.Context) ([]*models.Team, error) {
+	var teams []*models.Team
+
+	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(TeamCollection).Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	err = cursor.All(ctx, &teams)
+	if err != nil {
+		return nil, err
+	}
+
+	return teams, nil
+}
+
+func (m *Client) FindTeam(ctx context.Context, id string) (*models.Team, error) {
+	var team *models.Team
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = m.client.Database(AeroSquirrelDatabase).Collection(TeamCollection).FindOne(ctx, bson.M{"_id": objectId}).Decode(&team)
+	if err != nil {
+		return nil, err
+	}
+
+	return team, nil
+}
+
+func (m *Client) UpdateTeam(ctx context.Context, id string, team *models.Team) (*primitive.ObjectID, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = m.client.Database(AeroSquirrelDatabase).Collection(TeamCollection).UpdateOne(ctx, bson.M{"_id": objectId}, bson.M{"$set": team})
+	if err != nil {
+		return nil, err
+	}
+
+	return &objectId, nil
+}
+
+func (m *Client) DeleteTeam(ctx context.Context, id string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = m.client.Database(AeroSquirrelDatabase).Collection(TeamCollection).DeleteOne(ctx, bson.M{"_id": objectId})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Client) AddUserToTeam(ctx context.Context, id string, userId string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	userIdObjectId, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return err
+	}
+
+	_, err = m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).UpdateOne(ctx, bson.M{"_id": userIdObjectId}, bson.M{"$set": bson.M{"teamId": objectId}})
+
+	return nil
+}
+
 func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
 	res, err := m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).InsertOne(ctx, user)
 	if err != nil {
@@ -58,6 +146,27 @@ func (m *Client) FindUserByUsername(ctx context.Context, username string) (*mode
 	}
 
 	return user, nil
+}
+
+func (m *Client) FindUsersByTeamId(ctx context.Context, teamId string) ([]*models.User, error) {
+	var users []*models.User
+
+	objectId, err := primitive.ObjectIDFromHex(teamId)
+	if err != nil {
+		return nil, err
+	}
+
+	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).Find(ctx, bson.M{"teamId": objectId})
+	if err != nil {
+		return nil, err
+	}
+
+	err = cursor.All(ctx, &users)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
 
 func (m *Client) FindUser(ctx context.Context, id string) (*models.User, error) {
