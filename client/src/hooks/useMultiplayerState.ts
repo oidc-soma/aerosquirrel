@@ -6,6 +6,7 @@ import {
   TDShape,
   TDUser,
   TldrawApp,
+  Rectangle,
 } from "@tldraw/tldraw";
 import { useThrottleCallback } from "@react-hook/throttle";
 import * as yorkie from "yorkie-js-sdk";
@@ -13,6 +14,7 @@ import randomColor from "randomcolor";
 import { uniqueNamesGenerator, names } from "unique-names-generator";
 
 import type { Options, YorkieDocType } from "./types";
+import { createShapes, deleteShapes } from "@tldraw/tldraw/dist/state/commands";
 
 // Yorkie Client declaration
 let client: yorkie.Client<yorkie.Indexable>;
@@ -20,10 +22,11 @@ let client: yorkie.Client<yorkie.Indexable>;
 // Yorkie Document declaration
 let doc: yorkie.Document<yorkie.Indexable>;
 
-export function useMultiplayerState(roomId: string) {
+export function useMultiplayerState(roomId: string, { parentFunction }: any) {
   const [app, setApp] = useState<TldrawApp>();
   const [loading, setLoading] = useState(true);
-
+  //const [chRootValue, setchRootValue] = useState({});
+  let chRootValue = {};
   // Callbacks --------------
 
   const onMount = useCallback(
@@ -32,7 +35,7 @@ export function useMultiplayerState(roomId: string) {
       app.setIsLoading(true);
       app.pause();
       setApp(app);
-
+      //parentFunction(app);
       const randomName = uniqueNamesGenerator({
         dictionaries: [names],
       });
@@ -62,7 +65,6 @@ export function useMultiplayerState(roomId: string) {
       bindings: Record<string, TDBinding | undefined>
     ) => {
       if (!app || client === undefined || doc === undefined) return;
-
       doc.update((root) => {
         Object.entries(shapes).forEach(([id, shape]) => {
           if (!shape) {
@@ -90,6 +92,8 @@ export function useMultiplayerState(roomId: string) {
           }
         });
       });
+      //parentFunction(app);
+      //createShapes(app,)
     },
     60,
     false
@@ -126,17 +130,21 @@ export function useMultiplayerState(roomId: string) {
       const root = doc.getRoot();
 
       // Parse proxy object to record
+
       const shapeRecord: Record<string, TDShape> = JSON.parse(
         root.shapes.toJSON()
       );
+
       const bindingRecord: Record<string, TDBinding> = JSON.parse(
         root.bindings.toJSON()
       );
       const assetRecord: Record<string, TDAsset> = JSON.parse(
         root.assets.toJSON()
       );
-
+      chRootValue = root.shapes.toJSON();
+      parentFunction(chRootValue);
       // Replace page content with changed(propagated) records
+      //console.log("KORA" + root.shapes);
       app?.replacePageContent(shapeRecord, bindingRecord, assetRecord);
     }
 
@@ -186,7 +194,6 @@ export function useMultiplayerState(roomId: string) {
         // 02. Create document with tldraw custom object type, then attach it into the client.
         doc = new yorkie.Document<YorkieDocType>(roomId);
         await client.attach(doc);
-
         // 03. Initialize document if document not exists.
         doc.update((root) => {
           if (!root.shapes) {
@@ -198,6 +205,8 @@ export function useMultiplayerState(roomId: string) {
           if (!root.assets) {
             root.assets = {};
           }
+          //setchRootValue(root);
+          chRootValue = root;
         }, "create shapes/bindings/assets object if not exists");
 
         // 04. Subscribe document event and handle changes.
@@ -232,11 +241,13 @@ export function useMultiplayerState(roomId: string) {
 
     setupDocument();
 
+    //console.log("KORA" + chRootValue);
+
     return () => {
       window.removeEventListener("beforeunload", handleDisconnect);
       stillAlive = false;
     };
-  }, [app]);
+  }, [app, chRootValue]);
 
   return {
     onMount,
