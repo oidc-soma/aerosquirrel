@@ -32,6 +32,7 @@ func Endpoints(ctx context.Context) *gin.Engine {
 		v1.POST("/resources", apiHandler.CreateResource)
 		v1.GET("/resources", apiHandler.GetResources)
 		v1.GET("/resources/:id", apiHandler.GetOneResource)
+		v1.POST("/resources/search/", apiHandler.GetResourcesByFilter)
 		v1.PATCH("/resources/:id", apiHandler.UpdateOneResource)
 		v1.DELETE("/resources/:id", apiHandler.DeleteOneResource)
 

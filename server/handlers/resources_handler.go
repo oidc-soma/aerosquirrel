@@ -3,12 +3,14 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	database "github.com/oidc-soma/aerosquirrel/server/database/mongo"
 	"github.com/oidc-soma/aerosquirrel/server/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"reflect"
 )
 
 type ApiHandler struct {
@@ -47,19 +49,10 @@ func (h *ApiHandler) CreateResource(c *gin.Context) {
 }
 
 func (h *ApiHandler) GetResources(c *gin.Context) {
-	var tags []models.Tag
 	var resources []*models.Resource
 	var err error
 
-	query := c.Request.URL.Query()
-	if len(query) == 0 {
-		resources, err = h.db.FindAllResources(context.Background())
-	} else {
-		for key, values := range query {
-			tags = append(tags, models.Tag{Key: key, Value: values[0]})
-		}
-		resources, err = h.db.FindMultipleResources(context.Background(), tags)
-	}
+	resources, err = h.db.FindAllResources(context.Background())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -76,6 +69,54 @@ func (h *ApiHandler) GetOneResource(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, resource)
+}
+
+func (h *ApiHandler) GetResourcesByFilter(c *gin.Context) {
+	var filters []models.Filter
+	var resources []*models.Resource
+	caser := cases.Title(language.AmericanEnglish)
+
+	err := json.NewDecoder(c.Request.Body).Decode(&filters)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	resource := models.Resource{}
+	for index, filter := range filters {
+		_, ok := reflect.TypeOf(resource).FieldByName(caser.String(filter.Field))
+		if !ok {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid field"})
+			return
+		}
+		switch filter.Operator {
+		case "eq":
+			filters[index].Operator = "$eq"
+		case "ne":
+			filters[index].Operator = "$ne"
+		case "contain":
+			if filter.Field == "tags" {
+				filters[index].Operator = "$in"
+			} else {
+				filters[index].Operator = "$regex"
+			}
+		case "not_contain":
+			if filter.Field == "tags" {
+				filters[index].Operator = "$nin"
+			} else {
+				filters[index].Operator = "$not"
+			}
+		default:
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid operator"})
+		}
+	}
+	resources, err = h.db.FindMultipleResources(context.Background(), filters)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resources)
 }
 
 func (h *ApiHandler) UpdateOneResource(c *gin.Context) {

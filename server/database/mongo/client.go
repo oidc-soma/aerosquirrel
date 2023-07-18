@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-
+	"fmt"
 	"github.com/oidc-soma/aerosquirrel/server/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -147,10 +147,21 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 	return resource, nil
 }
 
-func (m *Client) FindMultipleResources(ctx context.Context, tags []models.Tag) ([]*models.Resource, error) {
+func (m *Client) FindMultipleResources(ctx context.Context, filters []models.Filter) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
-	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).Find(ctx, bson.D{{"tags", bson.D{{"$all", tags}}}})
+	var bsonFilter bson.A
+	for _, f := range filters {
+		if f.Operator == "$in" || f.Operator == "$nin" {
+			bsonFilter = append(bsonFilter, bson.M{f.Field: bson.M{f.Operator: bson.A{f.Value}}})
+		} else if f.Operator == "$not" {
+			bsonFilter = append(bsonFilter, bson.M{f.Field: bson.M{f.Operator: bson.M{"$regex": f.Value}}})
+		} else {
+			bsonFilter = append(bsonFilter, bson.M{f.Field: bson.M{f.Operator: f.Value}})
+		}
+	}
+	fmt.Println(bsonFilter)
+	cursor, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).Find(ctx, bson.M{"$and": bsonFilter})
 	if err != nil {
 		return nil, err
 	}
