@@ -44,6 +44,8 @@ func Endpoints(ctx context.Context) *gin.Engine {
 		v1.PATCH("/resources/:id", apiHandler.UpdateOneResource)
 		v1.DELETE("/resources/:id", apiHandler.DeleteOneResource)
 
+		v1.GET("/resources/import", apiHandler.ImportCSPResources)
+
 		v1.GET("/health", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"status": "ok",

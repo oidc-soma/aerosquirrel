@@ -223,6 +223,21 @@ func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) 
 	return nil
 }
 
+func (m *Client) BulkCreateResources(ctx context.Context, resources []*models.Resource) error {
+	var documents []interface{}
+
+	for _, resource := range resources {
+		documents = append(documents, resource)
+	}
+
+	_, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).InsertMany(ctx, documents)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Client) FindAllResourcesByTeamId(ctx context.Context, teamId string) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
