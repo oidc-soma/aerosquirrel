@@ -89,6 +89,19 @@ func (h *ApiHandler) UpdateTeam(c *gin.Context) {
 		return
 	}
 
+	existingTeam, err := h.db.FindTeam(context.Background(), id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if team.Name == "" {
+		team.Name = existingTeam.Name
+	}
+	if team.OwnerId.IsZero() {
+		team.OwnerId = existingTeam.OwnerId
+	}
+
 	objectId, err = h.db.UpdateTeam(context.Background(), id, &team)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

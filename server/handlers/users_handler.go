@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -83,13 +84,7 @@ func (h *ApiHandler) Login(c *gin.Context) {
 }
 
 func (h *ApiHandler) GetUsers(c *gin.Context) {
-	userId, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "user id not found"})
-		return
-	}
-
-	user, err := h.db.FindUser(context.Background(), userId.(primitive.ObjectID).Hex())
+	user, err := h.GetCurrentUser(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -105,24 +100,33 @@ func (h *ApiHandler) GetUsers(c *gin.Context) {
 }
 
 func (h *ApiHandler) GetUser(c *gin.Context) {
-	userId, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "user id not found"})
-		return
-	}
-
 	user, err := h.db.FindUser(context.Background(), c.Param("id"))
 	if err != nil && err.Error() != "mongo: no documents in result" {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, err = h.db.FindUser(context.Background(), userId.(primitive.ObjectID).Hex())
+	user, err = h.GetCurrentUser(c)
 	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+func (h *ApiHandler) GetCurrentUser(c *gin.Context) (*models.User, error) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		return nil, fmt.Errorf("user id not found")
+	}
+
+	user, err := h.db.FindUser(context.Background(), userId.(primitive.ObjectID).Hex())
+	if err != nil {
+		return nil, fmt.Errorf("user id not found")
+	}
+
+	return user, nil
 }
 
 func (h *ApiHandler) UpdateUser(c *gin.Context) {
@@ -134,6 +138,25 @@ func (h *ApiHandler) UpdateUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	existingUser, err := h.db.FindUser(context.Background(), id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if user.TeamId.IsZero() {
+		user.TeamId = existingUser.TeamId
+	}
+	if user.Username == "" {
+		user.Username = existingUser.Username
+	}
+	if user.Email == "" {
+		user.Email = existingUser.Email
+	}
+	if user.Password == "" {
+		user.Password = existingUser.Password
 	}
 
 	objectId, err = h.db.UpdateUser(context.Background(), id, &user)
