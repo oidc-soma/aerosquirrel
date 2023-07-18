@@ -256,3 +256,5 @@ export function useMultiplayerState(roomId: string, { parentFunction }: any) {
     onChangePresence,
   };
 }
+
+export { doc };
