@@ -28,7 +28,7 @@ export default function Editor() {
   const fileSystemEvents = useFileSystem();
   const { ...events } = useMultiplayerState(
     // `tldraw-${new Date().toISOString().substring(0, 10).replace(/-/g, "")}`
-    'tldraw-Savere', {parentFunction}, {appExport}
+    'tldraw-storage', {parentFunction}, {appExport}
   );
 
   const randomString = (length = 8) => {
@@ -47,28 +47,94 @@ export default function Editor() {
     
     doc.update((root) => {
       let Id = randomString(36);
-      root.shapes[Id] = {
-        
-          id: Id,
-          type: "rectangle",
-          name: "Rectangle",
-          parentId: "page",
-          childIndex: 2,
-          point: [482, -267.56],
-          size: [119.32, 129.24],
-          rotation: 0,
-          style: {
-            color: "black",
-            size: "small",
-            isFilled: false,
-            dash: "draw",
-            scale: 1,
-          },
-          label: "",
-          labelPoint: [0.5, 0.5],
-        };
+      let InstanceIconId = randomString(36);
+      let InstanceTextId = randomString(36);
+      let InstanceCompletedId = randomString(36);
+      let InstanceTextName = "InstanceName";
+      let OriginSrc =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAMKADAAQAAAABAAAAMAAAAADbN2wMAAABO0lEQVRoBe1U2w3CMAwMiA3YCqZhEqahWzEDNB9nWdE16UcTx5WRUNw4re9hJ6X4OVLg+0q//C8h994v6+nnq37wGAcBa9fcO3CpKbgO52fNP2pnBuSW+zs9t+q0HLAGn3FXMdy2mOn9VYGqU/rskTG7ssvvtxwoz0/3LA7sYWuFnmFDV5zHATDSKjPmOj8qZthQ270DQQBWWq1xC1kpj7riAJv0uIUgU8c1bqGO4u76tMzALP3OUDNsmFn3LSQOgJFWgDHX+VExw4ba7h0IArDSapUZmKXfmRAMG+bCfQuJA2CkFWDMdX5UzLChtnsHggCstFplBmbpdyYEw4a5cN9C4gAYaQUYc50fFTNsqH0eB8CIrbM4wbC1HFjYS4P3jsOQnWBu9N6vCdZyoPbuFLkgYG2DewesBYz6fzqMaA3IXYFbAAAAAElFTkSuQmCC";
 
 
+      root.assets[InstanceIconId] = {
+          "id": InstanceIconId,
+          "name": "AWS_EC2_icon",
+          "size": [
+            48,
+            48
+          ],
+          "src": OriginSrc,
+          "type": "image",
+      };
+
+      root.shapes[InstanceIconId] = {
+        assetId: InstanceIconId,
+        childIndex: 1,
+        id: InstanceIconId,
+        name: "Image",
+        parentId: InstanceCompletedId,
+        point: [1216.33, 755.14],
+        size: [60, 60],
+        rotation: 0,
+        style: {
+          color: "black",
+          dash: "draw",
+          isFilled: false,
+          scale: 1,
+          size: "small",
+        },
+        type: "image"
+      };
+
+      root.shapes[InstanceTextId] = {
+        childIndex: 2,
+        id: InstanceTextId,
+        name: "Text",
+        parentId: InstanceCompletedId,
+        point: [
+          1187.26,
+          847.38
+        ],
+        rotation: 0,
+        style: {
+          color: "black",
+          dash: "draw",
+          font: "script",
+          isFilled: false,
+          scale: 0.940027,
+          size: "small",
+          textAlign: "middle",
+        },
+        text: "Instance Name",
+        type: "text",
+      }
+      
+      root.shapes[InstanceCompletedId] = {
+        childIndex: 1,
+        children: [
+          InstanceIconId,
+          InstanceTextId,
+        ],
+        id: InstanceCompletedId,
+        name: "Group",
+        parentId: "page",
+        point: [
+          1187.26,
+          755.14
+        ],
+        rotation: 0,
+        size: [
+          138,
+          128.24
+        ],
+        style: {
+          color: "black",
+          dash: "draw",
+          isFilled: false,
+          scale: 1,
+          size: "small",
+        },
+        type: "group"
+      }
 
     })
 
