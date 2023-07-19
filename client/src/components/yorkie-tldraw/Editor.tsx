@@ -13,6 +13,8 @@ import { useMultiplayerState } from '../../hooks/useMultiplayerState';
 import CustomCursor from '../../CursorComponent';
 import { useState, useCallback } from 'react';
 import { doc } from '../../hooks/useMultiplayerState';
+import Button from "react-bootstrap/Button";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Editor() {
   const [AppRes, setAppRes] = useState<TldrawApp>();
@@ -168,9 +170,32 @@ export default function Editor() {
 
   return (
     <>
-    
-      <button style={{ zIndex: 10000}} onClick={ButtonFunc}>테스트용 버튼</button>
-      <div className="tldraw" style={{position: 'absolute', top: '200px', width: '100%', height: '600px'}}>
+      <Button
+        variant="outline-primary"
+        style={{
+          float: "right",
+        }}
+      >
+        Yorkie Configure
+      </Button>
+      <Button
+        variant="outline-primary"
+        onClick={ButtonFunc}
+        style={{
+          float: "right",
+        }}
+      >
+        Add and Draw New Instance
+      </Button>
+      <div
+        className="tldraw"
+        style={{
+          position: "absolute",
+          top: "40px",
+          width: "100%",
+          height: "calc( 100% - 40px)",
+        }}
+      >
         <Tldraw
           components={component}
           autofocus
