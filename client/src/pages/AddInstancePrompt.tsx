@@ -108,6 +108,11 @@ interface ChildProps {
 function AddInstancePrompt({closePrompt, AddInstFunction}:ChildProps) {
   const [AppRes, setAppRes] = useState<TldrawApp>();
 
+    const OKButtonFunction = () => {
+        AddInstFunction();
+        closePrompt();
+    }
+    
     const randomString = (length = 8) => {
       const chars =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -236,7 +241,7 @@ const handleClick = () => {
         <SelectBox options={OPTIONS}></SelectBox>
         <br />
         <br />
-        <Button type="button" className="btn btn-primary" onClick={AddInstFunction}>
+        <Button type="button" className="btn btn-primary" onClick={OKButtonFunction}>
           OK
         </Button>
         <Button type="button" className="btn btn-secondary" onClick={handleClick}>
