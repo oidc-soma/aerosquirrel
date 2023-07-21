@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import AddAccount from './pages/AddAccount';
 import SignUp from './pages/SignUp';
 import Drawer from './pages/Drawer';
+import AddInstancePrompt from './pages/AddInstancePrompt';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/settings/*" element={<Settings />}></Route>
         <Route path="/signup/*" element={<SignUp />}></Route>
         <Route path="/drawer/*" element={<Drawer />}></Route>
+        <Route path="/addinst/*" element={<AddInstancePrompt />}></Route>
       </Routes>
       </BrowserRouter>
     </div>

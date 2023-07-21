@@ -15,9 +15,21 @@ import { useState, useCallback } from 'react';
 import { doc } from '../../hooks/useMultiplayerState';
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AddInstancePrompt from "../../pages/AddInstancePrompt";
 
 export default function Editor() {
   const [AppRes, setAppRes] = useState<TldrawApp>();
+
+    const [showAddInstancePopup, setshowAddInstancePopup] = useState(false);
+
+    const showAddInstancePopupFunction = () => {
+      setshowAddInstancePopup(true);
+    };
+
+    const closeAddInstancePopupFunction = () => {
+      setshowAddInstancePopup(false);
+    };
+
   const appExport = (app: TldrawApp) => {
     setAppRes(app);
   }
@@ -30,7 +42,7 @@ export default function Editor() {
   const fileSystemEvents = useFileSystem();
   const { ...events } = useMultiplayerState(
     // `tldraw-${new Date().toISOString().substring(0, 10).replace(/-/g, "")}`
-    'tldraw-storage', {parentFunction}, {appExport}
+    'tldraw-storage_k', {parentFunction}, {appExport}
   );
 
   const randomString = (length = 8) => {
@@ -180,7 +192,7 @@ export default function Editor() {
       </Button>
       <Button
         variant="outline-primary"
-        onClick={ButtonFunc}
+        onClick={showAddInstancePopupFunction}
         style={{
           float: "right",
         }}
@@ -204,6 +216,9 @@ export default function Editor() {
           {...fileSystemEvents}
           {...events}
         />
+        {showAddInstancePopup && (
+          <AddInstancePrompt closePrompt={closeAddInstancePopupFunction} AddInstFunction={ButtonFunc} />
+        )}
       </div>
     </>
   );
