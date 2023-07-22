@@ -1,0 +1,17 @@
+name: Go Docker Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ./.github/workflows/go-workflow-templates/go-base-docker-publish.yaml
+    secrets: inherit
+    with:
+      go_version: "1.19"
+      package_path: "./"
+      dockerfile_path: "./Dockerfile"
+      image_repository: "aerosquirrel"
+      image_tag: "latest"
