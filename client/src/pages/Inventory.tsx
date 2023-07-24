@@ -95,9 +95,9 @@ function Inventory() {
     return(
         <>
             <InventoryLabel>Inventory</InventoryLabel>
-            <InventoryLists />
+            <InventoryLists data={inventoryValue} />
             
-            <p>{JSON.stringify(inventoryValue)}</p>
+            {/* <p>{JSON.stringify(inventoryValue)}</p> */}
            
         </>
     );
