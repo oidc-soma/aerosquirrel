@@ -12,11 +12,14 @@ import AddAccount from './pages/AddAccount';
 import SignUp from './pages/SignUp';
 import Drawer from './pages/Drawer';
 import AddInstancePrompt from './pages/AddInstancePrompt';
-
+import { RecoilRoot, atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { InventoryAtom } from './atoms';
 
 function App() {
+
   return (
     <div className="App">
+      <RecoilRoot>
       <BrowserRouter>
       <Navbar />
       <Routes>
@@ -30,6 +33,7 @@ function App() {
         <Route path="/addinst/*" element={<AddInstancePrompt />}></Route>
       </Routes>
       </BrowserRouter>
+      </RecoilRoot>
     </div>
   );
 }
