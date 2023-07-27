@@ -21,6 +21,23 @@ function SignUp() {
   const [isPasswordclicked, setPasswordclicked] = useState<boolean>(false);
   const [isPasswordcheckexist, setPasswordcheckexist] = useState<boolean>(false);
   const [isPasswordcheckclicked, setPasswordcheckclicked] = useState<boolean>(false);
+  const [SignupUsername, setSignupUsername] = useState<string>('');
+  const [SignupEmail, setSignupEmail] = useState<string>('');
+  const [SignupPassword, setSignupPassword] = useState<string>('');
+ 
+  const SignupSubmitFunction = () => {
+    axios.post(
+      "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/users",
+      {
+        username: SignupUsername,
+        email: SignupEmail,
+        password: SignupPassword,
+      }
+    ).then(function(response) {
+        sessionStorage.setItem('token',response.data.token);
+    });
+    
+  }
 
   return (
     <>
@@ -43,6 +60,7 @@ function SignUp() {
                 } else if (e.target.value === null || e.target.value === "") {
                   setUsernameexist(false);
                 }
+                setSignupUsername(e.currentTarget.value);
               }}
             ></Form.Control>
             {isUsernameclicked && !isUsernameexist ? (
@@ -61,6 +79,7 @@ function SignUp() {
                 } else if (e.target.value === null || e.target.value === "") {
                   setEmailexist(false);
                 }
+              setSignupEmail(e.currentTarget.value);
               }}
             ></Form.Control>
             {isEmailclicked && !isEmailexist ? (
@@ -80,6 +99,7 @@ function SignUp() {
                 } else if (e.target.value === null || e.target.value === "") {
                   setPasswordexist(false);
                 }
+                setSignupPassword(e.currentTarget.value);
               }}
             ></Form.Control>
             {isPasswordclicked && !isPasswordexist ? (
@@ -112,20 +132,23 @@ function SignUp() {
             <div className="buttonouterclass">
               <div
                 className="signupbutton"
-                onClick={() => {
-                  axios
-                    .post(
-                      "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/user",
-                      {
-                        username: "oidc",
-                        email: "oidc@gmail.com",
-                        password: "password",
-                      }
-                    )
-                    .then(function (response) {
-                      console.log(response);
-                    });
-                }}
+                onClick={
+                //   () => {
+                //   axios
+                //     .post(
+                //       "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/user",
+                //       {
+                //         username: "oidc",
+                //         email: "oidc@gmail.com",
+                //         password: "password",
+                //       }
+                //     )
+                //     .then(function (response) {
+                //       console.log(response);
+                //     });
+                // }
+                SignupSubmitFunction
+              }
               >
                 <Button variant="primary">Sign Up</Button>
               </div>
