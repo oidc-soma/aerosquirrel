@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	database "github.com/oidc-soma/aerosquirrel/server/database/mongo"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
+	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -194,4 +196,37 @@ func (h *ApiHandler) DeleteOneResource(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{})
+}
+
+func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
+	csp := c.Query("csp")
+
+	team, err := h.GetCurrentTeam(c)
+	if err != nil {
+		return
+	}
+
+	var resources []*models.Resource
+
+	// TODO(krapie): CSP credentials들을 어떤 방식으로 받아 올 것인지 고민해야 함
+	switch csp {
+	case "oci":
+		ociClient := oci.NewProvider()
+		resources, err = ociClient.FetchResources(team.Id)
+	case "k8s":
+		k8sClient := k8s.NewProvider()
+		resources, err = k8sClient.FetchResources(team.Id)
+	}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = h.db.BulkCreateResources(context.Background(), resources)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resources)
 }

@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/oidc-soma/aerosquirrel/server/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -51,31 +52,38 @@ func (h *ApiHandler) GetTeams(c *gin.Context) {
 }
 
 func (h *ApiHandler) GetTeam(c *gin.Context) {
-	userId, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "user id not found"})
-		return
-	}
-
 	team, err := h.db.FindTeam(context.Background(), c.Param("id"))
 	if err != nil && err.Error() != "mongo: no documents in result" {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, err := h.db.FindUser(context.Background(), userId.(primitive.ObjectID).Hex())
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	team, err = h.db.FindTeam(context.Background(), user.TeamId.Hex())
+	team, err = h.GetCurrentTeam(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, team)
+}
+
+func (h *ApiHandler) GetCurrentTeam(c *gin.Context) (*models.Team, error) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		return nil, fmt.Errorf("user id not found")
+	}
+
+	user, err := h.db.FindUser(context.Background(), userId.(primitive.ObjectID).Hex())
+	if err != nil {
+		return nil, err
+	}
+
+	team, err := h.db.FindTeam(context.Background(), user.TeamId.Hex())
+	if err != nil {
+		return nil, err
+	}
+
+	return team, nil
 }
 
 func (h *ApiHandler) UpdateTeam(c *gin.Context) {
