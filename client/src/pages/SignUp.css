@@ -1,0 +1,52 @@
+@keyframes horizontal-shaking {
+    0% {
+        transform: translateX(0)
+    }
+
+    25% {
+        transform: translateX(2px)
+    }
+
+    50% {
+        transform: translateX(-2px)
+    }
+
+    75% {
+        transform: translateX(2px)
+    }
+
+    100% {
+        transform: translateX(0)
+    }
+}
+
+.signupformouter{
+    position: relative;
+    top: 3rem;
+    left: 10rem;
+    width: 75vw;
+    margin-right: 3rem;
+    padding-right: 3rem;
+}
+
+.buttonouterclass{
+    position: relative;
+}
+
+.signupbutton{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.cancelbutton{
+    position: absolute;
+    left: 100px;
+    top: 0px;
+}
+
+.Errcaption {
+    color: red;
+    font-size: 10pt;
+    text-align: end;
+}

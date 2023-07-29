@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import DashboardUpperCards from '../components/cards/DashboardUpperCards';
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import {BarChart, Bar, Cell, XAxis, YAxis } from 'recharts';
+import Editor from '../components/yorkie-tldraw/Editor';
 
 const DashboardLabel = styled.h1`
   position: absolute;
