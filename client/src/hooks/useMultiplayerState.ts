@@ -17,10 +17,15 @@ import type { Options, YorkieDocType } from "./types";
 import { createShapes, deleteShapes } from "@tldraw/tldraw/dist/state/commands";
 
 // Yorkie Client declaration
-let client: yorkie.Client<yorkie.Indexable>;
+let client: yorkie.Client;
 
 // Yorkie Document declaration
 let doc: yorkie.Document<yorkie.Indexable>;
+
+interface PeerInterface {
+  clientID: string;
+  presence: yorkie.Indexable;
+}
 
 export function useMultiplayerState(
   roomId: string,
@@ -178,13 +183,13 @@ export function useMultiplayerState(
         await client.activate();
 
         // 01-1. Subscribe peers-changed event and update tldraw users state
-        client.subscribe((event) => {
+        client.subscribe((event: yorkie.ClientEvent<yorkie.Indexable>) => {
           if (event.type !== "peers-changed") return;
 
           const { type, peers } = event.value;
           // remove leaved users
           if (type === "unwatched") {
-            peers[doc.getKey()].map((peer) => {
+            peers[doc.getKey()].map((peer: PeerInterface) => {
               app?.removeUser(peer.presence.user.id);
             });
           }
@@ -192,7 +197,7 @@ export function useMultiplayerState(
           // update users
           const allPeers = client
             .getPeersByDocKey(doc.getKey())
-            .map((peer) => peer.presence.user);
+            .map((peer: PeerInterface) => peer.presence.user);
           app?.updateUsers(allPeers);
         });
 
