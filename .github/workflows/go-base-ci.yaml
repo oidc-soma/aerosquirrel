@@ -1,0 +1,48 @@
+name: Go Base CI Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        description: go version to use
+        required: true
+        type: string
+        default: "1.19"
+
+      golangci_config_path:
+        description: golangci config path
+        required: true
+        type: string
+        default: "1.19"
+
+      package_path:
+        description: package path
+        required: true
+        type: string
+        default: "./..."
+
+jobs:
+  build:
+    name: Go CI
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Set up Go ${{ inputs.go_version }}
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ inputs.go_version }}
+
+    - name: Lint
+      uses: golangci/golangci-lint-action@v3
+      with:
+        version: v1.43.0
+        args: --config=${{ inputs.golangci_config_path }}
+
+    - name: Build
+      run: go build -v ${{ inputs.package_path }}
+
+    - name: Test
+      run: go test -v ${{ inputs.package_path }}

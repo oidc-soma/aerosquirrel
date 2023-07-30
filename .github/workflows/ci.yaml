@@ -1,0 +1,23 @@
+name: Go CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "**.go"
+      - "go.mod"
+      - "go.sum"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "**.go"
+      - "go.mod"
+      - "go.sum"
+
+jobs:
+  build:
+    uses: ./.github/workflows/go-base-ci.yaml
+    with:
+      go_version: ">=1.19"
+      golangci_config_path: "./.golangci.yml"
+      package_path: "./"
