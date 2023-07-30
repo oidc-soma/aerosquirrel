@@ -32,5 +32,5 @@ var serverCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(serverCmd)
 	serverCmd.PersistentFlags().StringP("listen-address", "a", "0.0.0.0", `Listen address to start server on.`)
-	serverCmd.PersistentFlags().Int("port", 3000, `Port to start server on, default:"3000".`)
+	serverCmd.PersistentFlags().Int("port", 8080, `Port to start server on, default:"8080".`)
 }

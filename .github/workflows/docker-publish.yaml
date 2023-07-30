@@ -7,11 +7,12 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/go-workflow-templates/go-base-docker-publish.yaml
+    uses: ./.github/workflows/go-base-docker-publish.yaml
     secrets: inherit
     with:
       go_version: "1.19"
       package_path: "./"
-      dockerfile_path: "./Dockerfile"
+      dockerfile_path: "."
+      docker_username: "wlghks0314"
       image_repository: "aerosquirrel"
       image_tag: "latest"

@@ -16,8 +16,8 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/go-workflow-templates/go-base-ci.yaml
+    uses: ./.github/workflows/go-base-ci.yaml
     with:
-      go_version: "1.19"
+      go_version: ">=1.19"
       golangci_config_path: "./.golangci.yml"
       package_path: "./"
