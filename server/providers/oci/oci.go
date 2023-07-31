@@ -7,12 +7,12 @@ import (
 )
 
 type Provider struct {
-	client common.ConfigurationProvider
+	Client common.ConfigurationProvider
 }
 
 func NewProvider() *Provider {
 	return &Provider{
-		client: common.DefaultConfigProvider(),
+		Client: common.DefaultConfigProvider(),
 	}
 }
 

@@ -1,14 +1,15 @@
-package oci
+package compute
 
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
 	"github.com/oracle/oci-go-sdk/common"
 	"github.com/oracle/oci-go-sdk/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (p *Provider) FetchInstanceResources(ctx context.Context, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchInstanceResources(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
 	computeClient, err := core.NewComputeClientWithConfigurationProvider(common.DefaultConfigProvider())
@@ -16,7 +17,7 @@ func (p *Provider) FetchInstanceResources(ctx context.Context, teamId primitive.
 		return nil, err
 	}
 
-	tenancyOCID, err := p.client.TenancyOCID()
+	tenancyOCID, err := p.Client.TenancyOCID()
 	if err != nil {
 		return resources, err
 	}
@@ -43,7 +44,7 @@ func (p *Provider) FetchInstanceResources(ctx context.Context, teamId primitive.
 		resources = append(resources, &models.Resource{
 			TeamId:   teamId,
 			Name:     *instance.DisplayName,
-			Type:     "OCI Instance",
+			Type:     "Instance",
 			Cost:     0,
 			Tags:     tags,
 			Link:     "",
