@@ -18,8 +18,9 @@ function Inventory() {
     const [InventoryLSTData, setInventoryLSTData] = useState({});
 
     useEffect(() => {
+        const LoginToken = sessionStorage.getItem('token');
         axios.get(
-          "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/resources"
+          "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/resources", {headers: {"Authorization": `Bearer ${LoginToken}`}}
         ).then(function(response){
           console.log(response.data);
           setInventoryLSTData(response.data);

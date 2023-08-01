@@ -27,7 +27,7 @@ function Login() {
     const LoginPostExecute = () => {
       axios.post("https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/login", {username: LoginEmail, password: LoginPassword})
       .then(function(response) {
-        console.log(response);
+          sessionStorage.setItem("token", response.data.token);
       });
     };
 
