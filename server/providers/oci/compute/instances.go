@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
-	"github.com/oracle/oci-go-sdk/common"
 	"github.com/oracle/oci-go-sdk/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -12,7 +11,7 @@ import (
 func FetchInstanceResources(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
-	computeClient, err := core.NewComputeClientWithConfigurationProvider(common.DefaultConfigProvider())
+	computeClient, err := core.NewComputeClientWithConfigurationProvider(p.Client)
 	if err != nil {
 		return nil, err
 	}
