@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func FetchBucketResources(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchBuckets(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
 	objectStorageClient, err := objectstorage.NewObjectStorageClientWithConfigurationProvider(p.Client)
