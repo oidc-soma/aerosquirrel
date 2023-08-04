@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
+    animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 .mapchartGrid {
@@ -39,4 +40,14 @@
 
 .dashboardscreen{
     position: relative;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

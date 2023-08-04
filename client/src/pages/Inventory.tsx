@@ -71,14 +71,15 @@ function Inventory() {
     //   ],
     // });
 
-    return(
-        <>
-            <InventoryLabel>Inventory</InventoryLabel>
-            <InventoryLists data={inventoryValue} />
-            
-            {/* <p>{JSON.stringify(inventoryValue)}</p> */}
-           
-        </>
+    return (
+      <>
+        <div className="InventoryWrapper">
+          <InventoryLabel>Inventory</InventoryLabel>
+          <InventoryLists data={inventoryValue} />
+
+          {/* <p>{JSON.stringify(inventoryValue)}</p> */}
+        </div>
+      </>
     );
 
 }
