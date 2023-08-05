@@ -45,8 +45,11 @@ function Accounts() {
         variant="outline-primary"
         style={{ position: "absolute", right: "5rem", top: "4rem"}}
         onClick={showPopupFunction}>
-        Add New Account
+        Add/Modify Account
       </Button>
+      {/* <button onClick={showPopupFunction}>
+        Add New Account
+      </button> */}
       {showAddPopup&&<AddAccount closePopup={closePopupFunction}/>}
       {/* <Cards
         HeaderTitle="Amazon Web Services"
