@@ -4,3 +4,26 @@
     grid-gap: 20px;
     opacity: 1;
 }
+
+.ADDACButton {
+    position: relative;
+    top: 17vh;
+    color: #00C3FF;
+    background-color: white;
+    border: 1px solid #00C3FF;
+    border-radius: 7px;
+    padding: 7px;
+    width: 60%;
+    height: 3rem;
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

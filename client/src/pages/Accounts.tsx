@@ -41,16 +41,16 @@ function Accounts() {
   return (
     <>
       <AccountsLabel>Accounts</AccountsLabel>
-      <Button
+      {/* <Button
         variant="outline-primary"
         style={{ position: "absolute", right: "5rem", top: "4rem" }}
         onClick={showPopupFunction}
       >
         Add/Modify Account
-      </Button>
-      {/* <button onClick={showPopupFunction}>
-        Add New Account
-      </button> */}
+      </Button> */}
+      <button className="ADDACButton" onClick={showPopupFunction}>
+        Add/Modify Account
+      </button>
       {showAddPopup && <AddAccount closePopup={closePopupFunction} />}
       {/* <Cards
         HeaderTitle="Amazon Web Services"
