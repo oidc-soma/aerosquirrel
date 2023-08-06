@@ -43,45 +43,48 @@ function Accounts() {
       <AccountsLabel>Accounts</AccountsLabel>
       <Button
         variant="outline-primary"
-        style={{ position: "absolute", right: "5rem", top: "4rem"}}
-        onClick={showPopupFunction}>
+        style={{ position: "absolute", right: "5rem", top: "4rem" }}
+        onClick={showPopupFunction}
+      >
         Add/Modify Account
       </Button>
       {/* <button onClick={showPopupFunction}>
         Add New Account
       </button> */}
-      {showAddPopup&&<AddAccount closePopup={closePopupFunction}/>}
+      {showAddPopup && <AddAccount closePopup={closePopupFunction} />}
       {/* <Cards
         HeaderTitle="Amazon Web Services"
         SecondaryTitle="AWS"
         Content="AWS"
       ></Cards> */}
 
-<div className="cardWrapper" style={{height: "100vh", opacity: 1}}>
-      <div
-        className="cardGrid"
-        style={{
-          marginLeft: "140px",
-          paddingTop: "180px",
-          paddingRight: "5rem",
-        }}
-      >
-        <Cards
-          key={1}
-          HeaderTitle="CustomTitle"
-          SecondaryTitle="Amazon Web Services"
-          Content="AWS"
-        />
-        <Cards
-          key={2}
-          HeaderTitle="CustomTitle2"
-          SecondaryTitle="Oracle OCI"
-          Content="Oracle"
-        />
-        {/* {[...Array(5)].map((_, i) => (
+      <div className="cardWrapper" style={{ height: "100vh", opacity: 1 }}>
+        <div
+          className="cardGrid"
+          style={{
+            marginLeft: "140px",
+            paddingTop: "180px",
+            paddingRight: "5rem",
+          }}
+        >
+          <Cards
+            key={1}
+            HeaderTitle="Oracle OCI Account"
+            SecondaryTitle="Oracle OCI"
+            Content="Oracle"
+          />
+          <Cards
+            key={2}
+            HeaderTitle="AWS Account"
+            SecondaryTitle="Amazon Web Services"
+            Content="AWS"
+          />
+          <Cards key={3} HeaderTitle="Yorkie Account" SecondaryTitle="Yorkie" Content=""/>
+
+          {/* {[...Array(5)].map((_, i) => (
           <Cards key={i} HeaderTitle="TEST" SecondaryTitle="TEST" Content="TEST" />
         ))} */}
-      </div>
+        </div>
       </div>
     </>
     // <nav className="fixed bottom-0 left-0 top-0 z-20 flex w-[88px] flex-col gap-6 bg-purplin-850 px-5 py-8 dark:bg-black-900 pt-16">
