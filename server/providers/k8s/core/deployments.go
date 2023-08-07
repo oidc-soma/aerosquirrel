@@ -1,27 +1,28 @@
-package k8s
+package core
 
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func (p *Provider) FetchPodResources(ctx context.Context, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchDeployments(ctx context.Context, p k8s.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
 	var config v1.ListOptions
 
 	for {
-		res, err := p.client.CoreV1().Pods("").List(ctx, config)
+		res, err := p.Client.AppsV1().Deployments("").List(ctx, config)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, pod := range res.Items {
+		for _, deploy := range res.Items {
 			tags := make([]models.Tag, 0)
 
-			for key, value := range pod.Labels {
+			for key, value := range deploy.Labels {
 				tags = append(tags, models.Tag{
 					Key:   key,
 					Value: value,
@@ -29,15 +30,12 @@ func (p *Provider) FetchPodResources(ctx context.Context, teamId primitive.Objec
 			}
 
 			resources = append(resources, &models.Resource{
-				TeamId: teamId,
-				Name:   pod.Name,
-				Type:   "pod",
-				Cost:   0,
-				Metadata: map[string]string{
-					"namespace": pod.Namespace,
-				},
+				TeamId:   teamId,
+				Name:     deploy.Name,
+				Type:     "Deployment",
+				Cost:     0,
+				Region:   deploy.Namespace,
 				Tags:     tags,
-				Link:     "",
 				Provider: "k8s",
 			})
 		}
