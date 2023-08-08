@@ -7,6 +7,7 @@ import Cards from '../components/cards/Cards';
 import './Accounts.css';
 import CloudProvider from "../components/cards/CloudProvider";
 import AddAccount from "./AddAccount";
+import ImportCredential from './ImportCredential';
 
 const AccountsLabel = styled.h1`
 position: absolute;
@@ -21,14 +22,23 @@ const AddAccountButton =
 
 function Accounts() {
   const [showAddPopup, setshowAddPopup] = useState(false);
-  
+  const [showCredPopup, setshowCredPopup] = useState(false);
+
   const showPopupFunction = () => {
     setshowAddPopup(true);
+  }
+
+  const showCredFunction = () => {
+    setshowCredPopup(true);
   }
 
   const closePopupFunction = () => {
     setshowAddPopup(false);
   };
+
+  const closeCredFunction = () => {
+    setshowCredPopup(false);
+  }
 
   const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
 
@@ -51,7 +61,12 @@ function Accounts() {
       <button className="ADDACButton" onClick={showPopupFunction}>
         Add/Modify Account
       </button>
+      <button className="ImportCRDButton" onClick={showCredFunction}>
+        Import Credentials
+      </button>
       {showAddPopup && <AddAccount closePopup={closePopupFunction} />}
+      {showCredPopup && <ImportCredential closePopup={closeCredFunction} />}
+
       {/* <Cards
         HeaderTitle="Amazon Web Services"
         SecondaryTitle="AWS"
@@ -79,7 +94,12 @@ function Accounts() {
             SecondaryTitle="Amazon Web Services"
             Content="AWS"
           />
-          <Cards key={3} HeaderTitle="Yorkie Account" SecondaryTitle="Yorkie" Content=""/>
+          <Cards
+            key={3}
+            HeaderTitle="Yorkie Account"
+            SecondaryTitle="Yorkie"
+            Content=""
+          />
 
           {/* {[...Array(5)].map((_, i) => (
           <Cards key={i} HeaderTitle="TEST" SecondaryTitle="TEST" Content="TEST" />

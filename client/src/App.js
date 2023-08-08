@@ -17,6 +17,7 @@ import { RecoilRoot, atom, selector, useRecoilState, useRecoilValue } from 'reco
 import { InventoryAtom } from './atoms';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import AnimatedCursor from 'react-animated-cursor';
+import WelcomePage from './pages/WelcomePage';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -36,6 +37,7 @@ const AnimatedRoutes = () => {
           <Route path="/login/*" element={<Login />}></Route>
           <Route path="/drawer/*" element={<Drawer />}></Route>
           <Route path="/addinst/*" element={<AddInstancePrompt />}></Route>
+          <Route path="/welcome/*" element={<WelcomePage />}></Route>
         </Routes>
       </CSSTransition>
     </TransitionGroup>

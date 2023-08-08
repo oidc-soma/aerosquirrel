@@ -6,16 +6,32 @@
 }
 
 .ADDACButton {
-    position: relative;
+    position: relative; 
     top: 17vh;
     color: #00C3FF;
     background-color: white;
     border: 1px solid #00C3FF;
     border-radius: 7px;
     padding: 7px;
-    width: 60%;
+    width: 30%;
     height: 3rem;
     animation: fadeIn 0.3s ease-in-out forwards;
+    margin-right: 20px;
+}
+
+.ImportCRDButton{
+    position: relative;
+    margin-left: 20px;
+    top: 17vh;
+    width: 30%;
+    border: 1px solid #00C3FF;
+    color: #00C3FF;
+    border-radius: 7px;
+    padding: 7px;
+    height: 3rem;
+    background-color: white
+    ;
+
 }
 
 @keyframes fadeIn {
