@@ -28,7 +28,7 @@ const AnimatedRoutes = () => {
     <TransitionGroup className="transition-group">
       <CSSTransition key={location.key} classNames="fade" timeout={300}>
         <Routes location={location}>
-          <Route path="/" title="Dashboard - Aerosqirrel" element={<><Accounts /></>}></Route>
+          <Route path="/" title="Dashboard - Aerosqirrel" element={<><WelcomePage /></>}></Route>
           <Route path="/accounts/*" element={<Accounts />}></Route>
           <Route path="/inventory/*" element={<Inventory />}></Route>
           <Route path="/dashboard/*" element={<Dashboard />}></Route>
