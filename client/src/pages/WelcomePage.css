@@ -1,0 +1,17 @@
+.WelAni {
+    line-height: 2;
+animation: AniText 0.5s linear forwards;
+    /* 애니메이션 적용 */
+}
+
+@keyframes AniText {
+    from {
+        transform: translate(0,-5px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(0,0px);
+        opacity: 1;
+    }
+}

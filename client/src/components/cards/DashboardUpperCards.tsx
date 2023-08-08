@@ -9,7 +9,7 @@ import billsicon from '../../bills-icon.png';
 
 type CardsProps = {
   HeaderTitle: string;
-  SecondaryTitle: string;
+  SecondaryTitle: any;
   Content: string;
 };
 

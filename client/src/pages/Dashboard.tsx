@@ -1,3 +1,6 @@
+// @ts-ignore
+// @ts-nocheck
+
 import React from 'react';
 import Cards from '../components/cards/Cards';
 import './Dashboard.css';
@@ -7,6 +10,15 @@ import DashboardUpperCards from '../components/cards/DashboardUpperCards';
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import {BarChart, Bar, Cell, XAxis, YAxis } from 'recharts';
 import Editor from '../components/yorkie-tldraw/Editor';
+import { useEffect } from 'react';
+import axios from 'axios';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
+import { InventoryAtom } from '../atoms';
 
 const DashboardLabel = styled.h1`
   position: absolute;
@@ -60,14 +72,46 @@ const barchartdummy = [
   },
 ];
 
+function countUniqueIds(objectsArray:{}[]) {
+  const uniqueIds = new Set();
+
+  objectsArray.forEach((obj) => {
+    if (obj.hasOwnProperty("user_id")) {
+      uniqueIds.add(obj.user_id);
+    }
+  });
+
+  return uniqueIds.size;
+}
+
 function Dashboard() {
     const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
+    const [GetInventoryAtom, SetInventoryAtom] = useRecoilState(InventoryAtom);
 
     if(!DocumentTitle)
     {
         throw new Error('No document title error');
     }
     DocumentTitle.innerText = "Dashboard - Aerosquirrel";
+
+    useEffect(() => {
+          const LoginToken = sessionStorage.getItem("token");
+          axios
+            .get(
+              "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/resources",
+              { headers: { Authorization: `Bearer ${LoginToken}` } }
+            )
+            .then(function (response) {
+              SetInventoryAtom(response.data);
+            });
+
+          //SetInventoryAtom(InventoryLSTData);
+    }, []);
+
+    console.log(GetInventoryAtom.resources);
+    console.log(GetInventoryAtom.resources.length.toString());
+
+    let idnum = countUniqueIds(GetInventoryAtom.resources).toString();
 
     return (
       <>
@@ -84,25 +128,25 @@ function Dashboard() {
             <DashboardUpperCards
               key={1}
               HeaderTitle="Users"
-              SecondaryTitle="0"
+              SecondaryTitle={idnum}
               Content="Users"
             />
             <DashboardUpperCards
               key={1}
               HeaderTitle="Regions"
-              SecondaryTitle="0"
+              SecondaryTitle={GetInventoryAtom.resources.length.toString()}
               Content="Regions"
             />
             <DashboardUpperCards
               key={1}
               HeaderTitle="Resources"
-              SecondaryTitle="0"
+              SecondaryTitle={GetInventoryAtom.resources.length.toString()}
               Content="Resources"
             />{" "}
             <DashboardUpperCards
               key={1}
               HeaderTitle="Bills"
-              SecondaryTitle="0"
+              SecondaryTitle={GetInventoryAtom.resources.length.toString()}
               Content="Bills"
             />
           </div>
@@ -164,7 +208,7 @@ function Dashboard() {
                 <Bar dataKey="ElasticIP" fill="#000000" />
               </BarChart>
             </ResponsiveContainer>
-            </div>
+          </div>
         </div>
       </>
     );

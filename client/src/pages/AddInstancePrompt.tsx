@@ -13,6 +13,7 @@ import {
   TDUser,
   TldrawApp,
 } from "@tldraw/tldraw";
+import './AddInstancePrompt.css';
 
 export const Select = styled.select`
   -webkit-appearance: none;
@@ -57,6 +58,7 @@ const OPTIONS = [
 
 const SelectBoxWrapper = styled.div`
 	display: flex;
+  animation: fadeIn 0.3s ease-in-out forwards;
 `;
 
 const SelectBox = (props: any) => {

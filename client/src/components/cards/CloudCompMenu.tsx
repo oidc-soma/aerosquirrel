@@ -2,6 +2,7 @@ import React from 'react';
 import AWSIcon from '../../aws-icon.png';
 import OracleIcon from '../../oracle-icon.png';
 import OnPremiseIcon from '../../on-premise.png';
+import { Form } from 'react-bootstrap';
 
 type CloudCompProps = {
  TypeText: string;
@@ -14,11 +15,18 @@ function CloudCompMenu({TypeText}:CloudCompProps) {
         return (
           <li className="list-group-item d-flex justify-content-between align-items-center">
             <div className="d-flex align-items-center">
-                <img src={AWSIcon} width={40}></img>
+              <img src={AWSIcon} width={40}></img>
               <div className="ms-3">
-                <p className="fw-bold mb-1">{TypeText}</p>
+                <p className="fw-bold mb-1">
+                  {TypeText}
+                  <br />
+                  <Form.Control type="text" placeholder="Insert the token of AWS" />
+                </p>
               </div>
             </div>
+            <br />
+            <br />
+
             {/* <span className="badge rounded-pill badge-success">Continue</span> */}
           </li>
         );

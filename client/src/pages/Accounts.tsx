@@ -7,6 +7,7 @@ import Cards from '../components/cards/Cards';
 import './Accounts.css';
 import CloudProvider from "../components/cards/CloudProvider";
 import AddAccount from "./AddAccount";
+import ImportCredential from './ImportCredential';
 
 const AccountsLabel = styled.h1`
 position: absolute;
@@ -21,14 +22,23 @@ const AddAccountButton =
 
 function Accounts() {
   const [showAddPopup, setshowAddPopup] = useState(false);
-  
+  const [showCredPopup, setshowCredPopup] = useState(false);
+
   const showPopupFunction = () => {
     setshowAddPopup(true);
+  }
+
+  const showCredFunction = () => {
+    setshowCredPopup(true);
   }
 
   const closePopupFunction = () => {
     setshowAddPopup(false);
   };
+
+  const closeCredFunction = () => {
+    setshowCredPopup(false);
+  }
 
   const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
 
@@ -41,44 +51,61 @@ function Accounts() {
   return (
     <>
       <AccountsLabel>Accounts</AccountsLabel>
-      <Button
+      {/* <Button
         variant="outline-primary"
         style={{ position: "absolute", right: "5rem", top: "4rem" }}
-        onClick={showPopupFunction}>
-        Add New Account
-      </Button>
-      {showAddPopup&&<AddAccount closePopup={closePopupFunction}/>}
+        onClick={showPopupFunction}
+      >
+        Add/Modify Account
+      </Button> */}
+      <button className="ADDACButton" onClick={showPopupFunction}>
+        Add/Modify Account
+      </button>
+      <button className="ImportCRDButton" onClick={showCredFunction}>
+        Import Credentials
+      </button>
+      {showAddPopup && <AddAccount closePopup={closePopupFunction} />}
+      {showCredPopup && <ImportCredential closePopup={closeCredFunction} />}
+
       {/* <Cards
         HeaderTitle="Amazon Web Services"
         SecondaryTitle="AWS"
         Content="AWS"
       ></Cards> */}
 
-      <div
-        className="cardGrid"
-        style={{
-          marginLeft: "140px",
-          paddingTop: "180px",
-          paddingRight: "5rem",
-        }}
-      >
-        <Cards
-          key={1}
-          HeaderTitle="CustomTitle"
-          SecondaryTitle="Amazon Web Services"
-          Content="AWS"
-        />
-        <Cards
-          key={2}
-          HeaderTitle="CustomTitle2"
-          SecondaryTitle="Oracle OCI"
-          Content="Oracle"
-        />
-        {/* {[...Array(5)].map((_, i) => (
+      <div className="cardWrapper" style={{ height: "100vh", opacity: 1 }}>
+        <div
+          className="cardGrid"
+          style={{
+            marginLeft: "140px",
+            paddingTop: "180px",
+            paddingRight: "5rem",
+          }}
+        >
+          <Cards
+            key={1}
+            HeaderTitle="Oracle OCI Account"
+            SecondaryTitle="Oracle OCI"
+            Content="Oracle"
+          />
+          <Cards
+            key={2}
+            HeaderTitle="AWS Account"
+            SecondaryTitle="Amazon Web Services"
+            Content="AWS"
+          />
+          <Cards
+            key={3}
+            HeaderTitle="Yorkie Account"
+            SecondaryTitle="Yorkie"
+            Content=""
+          />
+
+          {/* {[...Array(5)].map((_, i) => (
           <Cards key={i} HeaderTitle="TEST" SecondaryTitle="TEST" Content="TEST" />
         ))} */}
+        </div>
       </div>
-      
     </>
     // <nav className="fixed bottom-0 left-0 top-0 z-20 flex w-[88px] flex-col gap-6 bg-purplin-850 px-5 py-8 dark:bg-black-900 pt-16">
     //     <div className="flex items-center gap-8 text-sm font-semibold text-black-400" rel="noopener noreferrer">

@@ -10,7 +10,7 @@ function CloudProvider() {
         <ul className="list-group list-group-light cloudprovider">
          <CloudCompMenu TypeText="Amazon Web Services" />
          <CloudCompMenu TypeText="Oracle Cloud Infrastructure" />
-         <CloudCompMenu TypeText="On-Premise" />
+         <CloudCompMenu TypeText="Yorkie(Draw Panel)" />
         </ul>
       </>
     );

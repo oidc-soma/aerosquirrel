@@ -8,6 +8,7 @@ interface ChildProps {
 function InventoryLists({data}:ChildProps) {
 
     return (
+      <div className="invouterlists">
       <table
         id="InventoryTable"
         className="table-striped table-bordered"
@@ -69,6 +70,7 @@ function InventoryLists({data}:ChildProps) {
         </tbody>
         <tfoot></tfoot>
       </table>
+      </div>
     );
 }
 export default InventoryLists;
