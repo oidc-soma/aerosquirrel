@@ -14,7 +14,7 @@ function WelcomePage() {
     margin-top: 4rem;
     margin-bottom: 3rem;
     `
-    
+
     const AdverTitle = styled.h1`
     font-size: 35px;
     font-weight: 600;
