@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
 import './Login.css';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginLabel = styled.h1`
   position: absolute;
@@ -13,6 +14,7 @@ const LoginLabel = styled.h1`
 
 function Login() {
 
+    const navigation = useNavigate();
     const [LoginEmail, setLoginEmail] = useState('');
     const [LoginPassword, setLoginPassword] = useState('');
 
@@ -52,7 +54,7 @@ function Login() {
               <br />
               <br />
               <Button onClick={LoginPostExecute}>Login</Button>
-              <Button variant="light">Cancel</Button>
+              <Button variant="light" onClick={()=> {navigation('/welcome')}}>Cancel</Button>
             </Form.Group>
           </Form>
         </div>

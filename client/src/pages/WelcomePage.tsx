@@ -1,20 +1,24 @@
 import React from "react";
 import { styled } from "styled-components";
 import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import './WelcomePage.css';
 
 function WelcomePage() {
+
+    const navigation = useNavigate();
 
     const AeroTitle = styled.h1`
     font-size: 23px;
     font-weight: 500;
     margin-top: 4rem;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
     `
-
+    
     const AdverTitle = styled.h1`
     font-size: 35px;
     font-weight: 600;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
     `
     const AdverImage = styled.img`
     width: 60%;
@@ -43,12 +47,12 @@ function WelcomePage() {
 
     return (
       <>
-        <AeroTitle>AeroSquirrel</AeroTitle>
-        <AdverTitle>
+        <AeroTitle className="WelAni">AeroSquirrel</AeroTitle>
+        <AdverTitle className="WelAni">
           Configure and Manage <br />
           Cloud Instance at one glance
         </AdverTitle>
-        <p>
+        <p className="WelAni">
           Unlock Infinite Possibilities with Aerosquirrel!
           <br />
           Elevate your convenience to with our solutions.
@@ -61,19 +65,38 @@ function WelcomePage() {
         <br />
         <br />
         <br />
-        <Button style={{ marginRight: "12px" }}>Login</Button>
+        <Button className="WelAni"
+          onClick={() => {
+            navigation("/login");
+          }}
+          style={{ marginRight: "12px" }}
+        >
+          Login
+        </Button>
 
-        <Button className="btn btn-secondary">Sign Up</Button>
+        <Button
+          className="btn btn-secondary WelAni"
+          onClick={() => {
+            navigation("/signup");
+          }}
+        >
+          Sign Up
+        </Button>
         <br />
         <br />
-        <br />
-        <br />
+
         <AdverImage
           src={process.env.PUBLIC_URL + "/welcomeadvimg.png"}
         ></AdverImage>
         <br />
         <br />
-        <DownDiv><DownTitle>Meet the <Amp>New Cloud</Amp><br />with AEROSQUIRREL</DownTitle></DownDiv>
+        <DownDiv className="WelAni">
+          <DownTitle>
+            Meet the <Amp>New Cloud</Amp>
+            <br />
+            with AEROSQUIRREL
+          </DownTitle>
+        </DownDiv>
       </>
     );   
 }

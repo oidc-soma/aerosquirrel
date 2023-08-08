@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
 import './SignUp.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpLabel = styled.h1`
   position: absolute;
@@ -13,6 +14,7 @@ const SignUpLabel = styled.h1`
 `;
 
 function SignUp() {
+  const navigation = useNavigate();
   const [isUsernameexist, setUsernameexist] = useState<boolean>(false);
   const [isUsernameclicked, setUsernameclicked] = useState<boolean>(false);
   const [isEmailexist, setEmailexist] = useState<boolean>(false);
@@ -153,7 +155,7 @@ function SignUp() {
                 <Button variant="primary">Sign Up</Button>
               </div>
               <div className="cancelbutton">
-                <Button variant="light">Cancel</Button>
+                <Button variant="light" onClick={()=>{navigation('/welcome')}}>Cancel</Button>
               </div>
             </div>
           </Form.Group>
