@@ -28,6 +28,19 @@ function WelcomePage() {
     background-color: black;
     `
 
+    const DownTitle = styled.h1`
+    font-size: 40px;
+    color: white;
+    position: absolute;
+    top: 7vh;;
+    left: 36vw;
+    `
+
+    const Amp = styled.a`
+      color: #00c3ff;
+      text-decoration: none;
+    `;
+
     return (
       <>
         <AeroTitle>AeroSquirrel</AeroTitle>
@@ -60,7 +73,7 @@ function WelcomePage() {
         ></AdverImage>
         <br />
         <br />
-        <DownDiv />
+        <DownDiv><DownTitle>Meet the <Amp>New Cloud</Amp><br />with AEROSQUIRREL</DownTitle></DownDiv>
       </>
     );   
 }
