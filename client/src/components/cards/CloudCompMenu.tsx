@@ -19,12 +19,9 @@ function CloudCompMenu({TypeText}:CloudCompProps) {
               <div className="ms-3">
                 <p className="fw-bold mb-1">
                   {TypeText}
-                  <br />
-                  <Form.Control type="text" placeholder="Insert the token of AWS" />
                 </p>
               </div>
             </div>
-            <br />
             <br />
 
             {/* <span className="badge rounded-pill badge-success">Continue</span> */}

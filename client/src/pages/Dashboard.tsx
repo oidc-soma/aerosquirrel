@@ -98,7 +98,7 @@ function Dashboard() {
           const LoginToken = sessionStorage.getItem("token");
           axios
             .get(
-              "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/resources",
+              "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/resources",
               { headers: { Authorization: `Bearer ${LoginToken}` } }
             )
             .then(function (response) {

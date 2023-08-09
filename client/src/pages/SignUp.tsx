@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
 import './SignUp.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {toast, ToastContainer} from 'react-toastify';
 
 const SignUpLabel = styled.h1`
   position: absolute;
@@ -28,18 +29,48 @@ function SignUp() {
   const [SignupPassword, setSignupPassword] = useState<string>('');
  
   const SignupSubmitFunction = () => {
-    axios.post(
-      "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/users",
-      {
-        username: SignupUsername,
-        email: SignupEmail,
-        password: SignupPassword,
-      }
-    ).then(function(response) {
-        sessionStorage.setItem('token',response.data.token);
-    });
+    axios
+      .post(
+        "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/users",
+        {
+          username: SignupUsername,
+          email: SignupEmail,
+          password: SignupPassword,
+        }
+      )
+      .then(function (response) {
+        sessionStorage.setItem("token", response.data.token);
+        
+        toast("Signup Complete!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        navigation('/dashboard');
+      });
     
   }
+
+  useEffect(()=> {
+    if (sessionStorage.getItem("token")) {
+      toast("Already Logged in", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      navigation("/dashboard");
+    }
+  }, []);
 
   return (
     <>
@@ -81,7 +112,7 @@ function SignUp() {
                 } else if (e.target.value === null || e.target.value === "") {
                   setEmailexist(false);
                 }
-              setSignupEmail(e.currentTarget.value);
+                setSignupEmail(e.currentTarget.value);
               }}
             ></Form.Control>
             {isEmailclicked && !isEmailexist ? (
@@ -135,27 +166,34 @@ function SignUp() {
               <div
                 className="signupbutton"
                 onClick={
-                //   () => {
-                //   axios
-                //     .post(
-                //       "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/user",
-                //       {
-                //         username: "oidc",
-                //         email: "oidc@gmail.com",
-                //         password: "password",
-                //       }
-                //     )
-                //     .then(function (response) {
-                //       console.log(response);
-                //     });
-                // }
-                SignupSubmitFunction
-              }
+                  //   () => {
+                  //   axios
+                  //     .post(
+                  //       "https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/user",
+                  //       {
+                  //         username: "oidc",
+                  //         email: "oidc@gmail.com",
+                  //         password: "password",
+                  //       }
+                  //     )
+                  //     .then(function (response) {
+                  //       console.log(response);
+                  //     });
+                  // }
+                  SignupSubmitFunction
+                }
               >
                 <Button variant="primary">Sign Up</Button>
               </div>
               <div className="cancelbutton">
-                <Button variant="light" onClick={()=>{navigation('/welcome')}}>Cancel</Button>
+                <Button
+                  variant="light"
+                  onClick={() => {
+                    navigation("/welcome");
+                  }}
+                >
+                  Cancel
+                </Button>
               </div>
             </div>
           </Form.Group>

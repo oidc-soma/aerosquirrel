@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
 import './Login.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {toast} from 'react-toastify';
 
 const LoginLabel = styled.h1`
   position: absolute;
@@ -27,11 +28,32 @@ function Login() {
 
 
     const LoginPostExecute = () => {
-      axios.post("https://d9c25fa3-a939-4ec2-abd9-a479b24bdf39.mock.pstmn.io/api/v1/login", {username: LoginEmail, password: LoginPassword})
-      .then(function(response) {
+      axios
+        .post(
+          "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/login",
+          { username: LoginEmail, password: LoginPassword }
+        )
+        .then(function (response) {
           sessionStorage.setItem("token", response.data.token);
-      });
+          navigation('/dashboard');
+        });
     };
+
+    useEffect(() => {
+     if (sessionStorage.getItem("token")) {
+       toast("Already Logged in", {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "light",
+       });
+       navigation("/dashboard");
+     }
+    }, []);
 
     return (
       <>
