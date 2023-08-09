@@ -6,6 +6,7 @@ import Cards from '../components/cards/Cards';
 import './Dashboard.css';
 import styled from 'styled-components';
 import ReactDOM from 'react-dom';
+import {useNavigate} from 'react-router-dom';
 import DashboardUpperCards from '../components/cards/DashboardUpperCards';
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import {BarChart, Bar, Cell, XAxis, YAxis } from 'recharts';
@@ -18,7 +19,9 @@ import {
   useResetRecoilState,
   useSetRecoilState,
 } from "recoil";
-import { InventoryAtom } from '../atoms';
+import { CSPAtom, InventoryAtom } from '../atoms';
+import { toast } from "react-toastify";
+
 
 const DashboardLabel = styled.h1`
   position: absolute;
@@ -87,6 +90,26 @@ function countUniqueIds(objectsArray:{}[]) {
 function Dashboard() {
     const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
     const [GetInventoryAtom, SetInventoryAtom] = useRecoilState(InventoryAtom);
+    const [GetCSPAtom, SetCSPAtom] = useRecoilState(CSPAtom);
+    const navigation = useNavigate();
+    useEffect(()=> {
+      localStorage.setItem("yorkie", "ciprjcqbjhd3s76qlvg0");
+    },[]);
+    useEffect(()=> {
+      if (!sessionStorage.getItem("token")) {
+      toast("Please Login or Signup", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    navigation("/login");
+    }},[]);
+
 
     if(!DocumentTitle)
     {
@@ -105,6 +128,13 @@ function Dashboard() {
               SetInventoryAtom(response.data);
             });
 
+          axios.get(
+            "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/configs/csps",
+            { headers: { Authorization: `Bearer ${LoginToken}` } }
+          ).then(function (response) {
+            //console.log(response.data);
+            SetCSPAtom(response.data);
+          })
           //SetInventoryAtom(InventoryLSTData);
     }, []);
 

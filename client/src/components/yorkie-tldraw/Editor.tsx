@@ -182,14 +182,14 @@ export default function Editor() {
 
   return (
     <>
-      <Button
+      {/* <Button
         variant="outline-primary"
         style={{
           float: "right",
         }}
       >
         Yorkie Configure
-      </Button>
+      </Button> */}
       <Button
         variant="outline-primary"
         onClick={showAddInstancePopupFunction}

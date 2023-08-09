@@ -37,6 +37,8 @@ export function useMultiplayerState(
   //const [chRootValue, setchRootValue] = useState({});
   let chRootValue = {};
   // Callbacks --------------
+  const apiKeyYKbef = localStorage.getItem("yorkie");
+  const apiKeyyorkie = apiKeyYKbef !== null ? apiKeyYKbef : "";
 
   const onMount = useCallback(
     (app: TldrawApp) => {
@@ -167,7 +169,7 @@ export function useMultiplayerState(
         //     Then activate client.
         const options: Options = {
           //   apiKey: import.meta.env.VITE_YORKIE_API_KEY,
-          apiKey: "ciprjcqbjhd3s76qlvg0",
+          apiKey: apiKeyyorkie,
           presence: {
             user: app?.currentUser,
           },
