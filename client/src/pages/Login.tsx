@@ -34,8 +34,33 @@ function Login() {
           { username: LoginEmail, password: LoginPassword }
         )
         .then(function (response) {
+          if(response.status===200)
+          {
+          toast("Login Completed", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
           sessionStorage.setItem("token", response.data.token);
           navigation('/dashboard');
+        }
+        else{
+          toast("Something went wrong, Please Try Again", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
         });
     };
 

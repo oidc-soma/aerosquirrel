@@ -90,7 +90,16 @@ function ImportCredential({ closePopup }: ChildProps) {
               })
         }
         else {
-            alert("Please Select File to Upload");
+          toast("Please Select File to Upload", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
     }
   

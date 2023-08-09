@@ -4,6 +4,8 @@ import InventoryLists from './InventoryLists';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { InventoryAtom } from '../atoms';
 import axios from 'axios';
+import {toast} from 'react-toastify';
+import {useNavigate} from 'react-router-dom';
 
 const InventoryLabel = styled.h1`
   position: absolute;
@@ -16,6 +18,24 @@ const InventoryLabel = styled.h1`
 function Inventory() {
 
     const [InventoryLSTData, setInventoryLSTData] = useState({});
+
+    const navigation = useNavigate();
+       useEffect(() => {
+         if (!sessionStorage.getItem("token")) {
+           toast("Please Login or Signup", {
+             position: "top-right",
+             autoClose: 5000,
+             hideProgressBar: false,
+             closeOnClick: true,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: "light",
+           });
+           navigation("/welcome");
+         }
+       }, []);
+
 
     useEffect(() => {
         const LoginToken = sessionStorage.getItem('token');

@@ -39,6 +39,8 @@ function SignUp() {
         }
       )
       .then(function (response) {
+        if(response.status===200)
+        {
         sessionStorage.setItem("token", response.data.token);
         
         toast("Signup Complete!", {
@@ -52,6 +54,19 @@ function SignUp() {
           theme: "light",
         });
         navigation('/dashboard');
+      }
+      else {
+        toast("An Error Occured, Please Try Again", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
       });
     
   }

@@ -107,7 +107,7 @@ function Dashboard() {
       progress: undefined,
       theme: "light",
     });
-    navigation("/login");
+    navigation("/welcome");
     }},[]);
 
 
