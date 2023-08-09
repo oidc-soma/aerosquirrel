@@ -190,7 +190,7 @@ function AddAccount({closePopup}:ChildProps){
 
           <div>{"On Premise Icon Designed by phatplus"}</div>
           <Button onClick={AccountModify}>OK</Button>
-          <Button>Cancel</Button>
+          <Button className="btn btn-secondary" onClick={closePopup}>Cancel</Button>
         </div>
       </>
     );
