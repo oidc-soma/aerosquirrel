@@ -23,7 +23,7 @@ import {
   useSetRecoilState,
 } from "recoil";
 import { InstanceNameAtom } from "../../atoms";
-
+import {toast} from 'react-toastify';
 
 export default function Editor() {
      const [GetInstanceName, SetInstanceName] =
@@ -68,8 +68,9 @@ export default function Editor() {
     return str;
   };
   const ButtonFunc = () => {
- 
-    
+    if(InstanceName!=="null")
+    {
+          
     doc.update((root) => {
       let Id = randomString(36);
       let InstanceIconId = randomString(36);
@@ -79,16 +80,12 @@ export default function Editor() {
       let OriginSrc =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAMKADAAQAAAABAAAAMAAAAADbN2wMAAABO0lEQVRoBe1U2w3CMAwMiA3YCqZhEqahWzEDNB9nWdE16UcTx5WRUNw4re9hJ6X4OVLg+0q//C8h994v6+nnq37wGAcBa9fcO3CpKbgO52fNP2pnBuSW+zs9t+q0HLAGn3FXMdy2mOn9VYGqU/rskTG7ssvvtxwoz0/3LA7sYWuFnmFDV5zHATDSKjPmOj8qZthQ270DQQBWWq1xC1kpj7riAJv0uIUgU8c1bqGO4u76tMzALP3OUDNsmFn3LSQOgJFWgDHX+VExw4ba7h0IArDSapUZmKXfmRAMG+bCfQuJA2CkFWDMdX5UzLChtnsHggCstFplBmbpdyYEw4a5cN9C4gAYaQUYc50fFTNsqH0eB8CIrbM4wbC1HFjYS4P3jsOQnWBu9N6vCdZyoPbuFLkgYG2DewesBYz6fzqMaA3IXYFbAAAAAElFTkSuQmCC";
 
-
       root.assets[InstanceIconId] = {
-          "id": InstanceIconId,
-          "name": "AWS_EC2_icon",
-          "size": [
-            48,
-            48
-          ],
-          "src": OriginSrc,
-          "type": "image",
+        id: InstanceIconId,
+        name: "AWS_EC2_icon",
+        size: [48, 48],
+        src: OriginSrc,
+        type: "image",
       };
 
       root.shapes[InstanceIconId] = {
@@ -107,7 +104,7 @@ export default function Editor() {
           scale: 1,
           size: "small",
         },
-        type: "image"
+        type: "image",
       };
 
       root.shapes[InstanceTextId] = {
@@ -115,10 +112,7 @@ export default function Editor() {
         id: InstanceTextId,
         name: "Text",
         parentId: InstanceCompletedId,
-        point: [
-          1187.26,
-          847.38
-        ],
+        point: [1187.26, 847.38],
         rotation: 0,
         style: {
           color: "black",
@@ -131,26 +125,17 @@ export default function Editor() {
         },
         text: InstanceName,
         type: "text",
-      }
-      
+      };
+
       root.shapes[InstanceCompletedId] = {
         childIndex: 1,
-        children: [
-          InstanceIconId,
-          InstanceTextId,
-        ],
+        children: [InstanceIconId, InstanceTextId],
         id: InstanceCompletedId,
         name: "Group",
         parentId: "page",
-        point: [
-          1187.26,
-          755.14
-        ],
+        point: [1187.26, 755.14],
         rotation: 0,
-        size: [
-          138,
-          128.24
-        ],
+        size: [138, 128.24],
         style: {
           color: "black",
           dash: "draw",
@@ -158,31 +143,43 @@ export default function Editor() {
           scale: 1,
           size: "small",
         },
-        type: "group"
-      }
+        type: "group",
+      };
+    });
 
-    })
+    const root = doc.getRoot();
 
+    // Parse proxy object to record
+
+    const shapeRecord: Record<string, TDShape> = JSON.parse(
+      root.shapes.toJSON()
+    );
+
+    const bindingRecord: Record<string, TDBinding> = JSON.parse(
+      root.bindings.toJSON()
+    );
+    const assetRecord: Record<string, TDAsset> = JSON.parse(
+      root.assets.toJSON()
+    );
+
+    // Replace page content with changed(propagated) records
+    //console.log("KORA" + root.shapes);
+    AppRes?.replacePageContent(shapeRecord, bindingRecord, assetRecord);
     
-      const root = doc.getRoot();
 
-      // Parse proxy object to record
-
-      const shapeRecord: Record<string, TDShape> = JSON.parse(
-        root.shapes.toJSON()
-      );
-
-      const bindingRecord: Record<string, TDBinding> = JSON.parse(
-        root.bindings.toJSON()
-      );
-      const assetRecord: Record<string, TDAsset> = JSON.parse(
-        root.assets.toJSON()
-      );
-  
-      // Replace page content with changed(propagated) records
-      //console.log("KORA" + root.shapes);
-      AppRes?.replacePageContent(shapeRecord, bindingRecord, assetRecord);
-    
+    }
+    else {
+      toast("Please Select the Instance", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
 
   };
   
