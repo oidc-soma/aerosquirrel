@@ -1,8 +1,18 @@
+// @ts-ignore
+// @ts-nocheck
+
 import React from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
 import { doc } from '../hooks/useMultiplayerState';
 import { useState } from "react";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
+
 import {
   Tldraw,
   useFileSystem,
@@ -14,6 +24,7 @@ import {
   TldrawApp,
 } from "@tldraw/tldraw";
 import './AddInstancePrompt.css';
+import { InventoryAtom } from "../atoms";
 
 export const Select = styled.select`
   -webkit-appearance: none;
@@ -35,25 +46,26 @@ export const Select = styled.select`
   }
 `;
 
-const OPTIONS = [
-  {
-    value: "vpc-0b6a762e556d8ee14",
-    name: "vpc-0b6a762e556d8ee14 | AWS | VPC | ap-sw | Sandbox  ",
-    cloud: "AWS",
-    service: "VPC",
-    region: "ap-sw",
-    account: "Sandbox",
-    cost: 19.94,
-  },
-  {
-    value: "bmc0999",
-    name: "bmc0999 | OCI | BareMetal Computing | ap-sydney-1 | Sandbox  ",
-    cloud: "OCI",
-    service: "BareMetal Computing",
-    region: "ap-sydney-1",
-    account: "Sandbox",
-    cost: 17.00,
-  },
+
+let OPTIONS = [
+  // {
+  //   value: "vpc-0b6a762e556d8ee14",
+  //   name: "vpc-0b6a762e556d8ee14 | AWS | VPC | ap-sw | Sandbox  ",
+  //   cloud: "AWS",
+  //   service: "VPC",
+  //   region: "ap-sw",
+  //   account: "Sandbox",
+  //   cost: 19.94,
+  // },
+  // {
+  //   value: "bmc0999",
+  //   name: "bmc0999 | OCI | BareMetal Computing | ap-sydney-1 | Sandbox  ",
+  //   cloud: "OCI",
+  //   service: "BareMetal Computing",
+  //   region: "ap-sydney-1",
+  //   account: "Sandbox",
+  //   cost: 17.00,
+  // },
 ];
 
 const SelectBoxWrapper = styled.div`
@@ -69,8 +81,14 @@ const SelectBox = (props: any) => {
   return (
     <SelectBoxWrapper>
       <Select>
-        {props.options.map((option: any) => (
+        {/* {props.options.map((option: any) => (
           <option value={option.value}>{option.name}</option>
+        ))} */}
+        {props.options.map((obj, index) => (
+          <option key={index} value={obj.name}>
+            {obj.id} | {obj.user_id} | {obj.name} | {obj.type} | {obj.cost} |{" "}
+            {obj.link}
+          </option>
         ))}
       </Select>
       <IconSVG
@@ -108,6 +126,11 @@ interface ChildProps {
 };
 
 function AddInstancePrompt({closePrompt, AddInstFunction}:ChildProps) {
+  const [GetInventoryAtom, SetInventoryAtom] = useRecoilState(InventoryAtom);
+
+OPTIONS = GetInventoryAtom.resources;
+
+
   const [AppRes, setAppRes] = useState<TldrawApp>();
 
     const OKButtonFunction = () => {

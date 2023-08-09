@@ -58,7 +58,7 @@ function Inventory() {
     const inventoryValue = useRecoilValue(InventoryAtom);
     const setinventoryRecoilState = useSetRecoilState(InventoryAtom);
     const resetState = useResetRecoilState(InventoryAtom);
-
+    
     // setinventoryRecoilState({
     //   'resources': [
     //     {
@@ -99,7 +99,7 @@ function Inventory() {
         <div className="InventoryWrapper">
           <InventoryLabel>Inventory</InventoryLabel>
           <InventoryLists data={inventoryValue} />
-
+          
           {/* <p>{JSON.stringify(inventoryValue)}</p> */}
         </div>
       </>
