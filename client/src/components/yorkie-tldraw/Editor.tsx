@@ -16,8 +16,19 @@ import { doc } from '../../hooks/useMultiplayerState';
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AddInstancePrompt from "../../pages/AddInstancePrompt";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
+import { InstanceNameAtom } from "../../atoms";
+
 
 export default function Editor() {
+     const [GetInstanceName, SetInstanceName] =
+       useRecoilState(InstanceNameAtom);
+     const InstanceName = GetInstanceName;
   const [AppRes, setAppRes] = useState<TldrawApp>();
 
     const [showAddInstancePopup, setshowAddInstancePopup] = useState(false);
@@ -57,7 +68,7 @@ export default function Editor() {
     return str;
   };
   const ButtonFunc = () => {
-    
+ 
     
     doc.update((root) => {
       let Id = randomString(36);
@@ -118,7 +129,7 @@ export default function Editor() {
           size: "small",
           textAlign: "middle",
         },
-        text: "Instance Name",
+        text: InstanceName,
         type: "text",
       }
       

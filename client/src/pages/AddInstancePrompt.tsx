@@ -24,7 +24,7 @@ import {
   TldrawApp,
 } from "@tldraw/tldraw";
 import './AddInstancePrompt.css';
-import { InventoryAtom } from "../atoms";
+import { InstanceNameAtom, InventoryAtom } from "../atoms";
 
 export const Select = styled.select`
   -webkit-appearance: none;
@@ -78,12 +78,21 @@ const SelectBox = (props: any) => {
         // event handler
         console.log(e.target.value);
       };
+
+  const [GetInstanceNameAtom, SetInstanceNameAtom] = useRecoilState(InstanceNameAtom);
+
+  const handleSelectChange = (event:any) => {
+    //console.log(event.target.value);
+    SetInstanceNameAtom(event.target.value);
+  }
+
   return (
     <SelectBoxWrapper>
-      <Select>
+      <Select onChange={handleSelectChange}>
         {/* {props.options.map((option: any) => (
           <option value={option.value}>{option.name}</option>
         ))} */}
+        <option value="null">Select the Instance</option>
         {props.options.map((obj, index) => (
           <option key={index} value={obj.name}>
             {obj.id} | {obj.user_id} | {obj.name} | {obj.type} | {obj.cost} |{" "}

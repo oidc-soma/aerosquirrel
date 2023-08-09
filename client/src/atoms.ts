@@ -13,3 +13,8 @@ export const CSPAtom = atom({
     k8s: [{ name: "" }, { token: "" }],
   },
 });
+
+export const InstanceNameAtom = atom({
+  key: "IName",
+  default: "",
+});
