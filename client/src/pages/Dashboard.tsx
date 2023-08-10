@@ -2,22 +2,16 @@
 // @ts-nocheck
 
 import React from 'react';
-import Cards from '../components/cards/Cards';
 import './Dashboard.css';
 import styled from 'styled-components';
-import ReactDOM from 'react-dom';
 import {useNavigate} from 'react-router-dom';
 import DashboardUpperCards from '../components/cards/DashboardUpperCards';
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import {BarChart, Bar, Cell, XAxis, YAxis } from 'recharts';
-import Editor from '../components/yorkie-tldraw/Editor';
+import {BarChart, Bar, XAxis, YAxis } from 'recharts';
 import { useEffect } from 'react';
 import axios from 'axios';
 import {
   useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
 } from "recoil";
 import { CSPAtom, InventoryAtom } from '../atoms';
 import { toast } from "react-toastify";
@@ -88,160 +82,189 @@ function countUniqueIds(objectsArray:{}[]) {
 }
 
 function Dashboard() {
-    const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
-    const [GetInventoryAtom, SetInventoryAtom] = useRecoilState(InventoryAtom);
-    const [GetCSPAtom, SetCSPAtom] = useRecoilState(CSPAtom);
-    const navigation = useNavigate();
-    useEffect(()=> {
-      localStorage.setItem("yorkie", "ciprjcqbjhd3s76qlvg0");
-    },[]);
-    useEffect(()=> {
-      if (!sessionStorage.getItem("token")) {
+  const DocumentTitle: HTMLTitleElement | null =
+    document.querySelector("title");
+  const [GetInventoryAtom, SetInventoryAtom] = useRecoilState(InventoryAtom);
+  const [GetCSPAtom, SetCSPAtom] = useRecoilState(CSPAtom);
+  const navigation = useNavigate();
+  useEffect(() => {
+    localStorage.setItem("yorkie", "ciprjcqbjhd3s76qlvg0");
+  }, []);
+  useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
       toast("Please Login or Signup", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    navigation("/welcome");
-    }},[]);
-
-
-    if(!DocumentTitle)
-    {
-        throw new Error('No document title error');
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      navigation("/welcome");
     }
-    DocumentTitle.innerText = "Dashboard - Aerosquirrel";
+  }, []);
 
-    useEffect(() => {
-          const LoginToken = sessionStorage.getItem("token");
-          axios
-            .get(
-              "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/resources",
-              { headers: { Authorization: `Bearer ${LoginToken}` } }
-            )
-            .then(function (response) {
-              SetInventoryAtom(response.data);
-            });
+  if (!DocumentTitle) {
+    throw new Error("No document title error");
+  }
+  DocumentTitle.innerText = "Dashboard - Aerosquirrel";
 
-          axios.get(
-            "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/configs/csps",
-            { headers: { Authorization: `Bearer ${LoginToken}` } }
-          ).then(function (response) {
-            //console.log(response.data);
-            SetCSPAtom(response.data);
-          })
-          //SetInventoryAtom(InventoryLSTData);
-    }, []);
+  useEffect(() => {
+    const LoginToken = sessionStorage.getItem("token");
+    axios
+      .get(
+        "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/resources",
+        { headers: { Authorization: `Bearer ${LoginToken}` } }
+      )
+      .then(function (response) {
+        SetInventoryAtom(response.data);
+      });
 
-    console.log(GetInventoryAtom.resources);
-    console.log(GetInventoryAtom.resources.length.toString());
+    axios
+      .get(
+        "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/configs/csps",
+        { headers: { Authorization: `Bearer ${LoginToken}` } }
+      )
+      .then(function (response) {
+        SetCSPAtom(response.data);
+      });
+  }, []);
 
-    let idnum = countUniqueIds(GetInventoryAtom.resources).toString();
+  const typeCosts = {};
 
-    return (
-      <>
-        <div className="dashboardscreen">
-          <DashboardLabel>Dashboard</DashboardLabel>
-          <div
-            className="dashboardGrid"
-            style={{
-              marginLeft: "140px",
-              paddingTop: "110px",
-              paddingRight: "5rem",
-            }}
-          >
-            <DashboardUpperCards
-              key={1}
-              HeaderTitle="Users"
-              SecondaryTitle={idnum}
-              Content="Users"
-            />
-            <DashboardUpperCards
-              key={1}
-              HeaderTitle="Regions"
-              SecondaryTitle={GetInventoryAtom.resources.length.toString()}
-              Content="Regions"
-            />
-            <DashboardUpperCards
-              key={1}
-              HeaderTitle="Resources"
-              SecondaryTitle={GetInventoryAtom.resources.length.toString()}
-              Content="Resources"
-            />{" "}
-            <DashboardUpperCards
-              key={1}
-              HeaderTitle="Bills"
-              SecondaryTitle={GetInventoryAtom.resources.length.toString()}
-              Content="Bills"
-            />
-          </div>
-          <div
-            className="mapchartGrid"
-            style={{
-              marginLeft: "140px",
-              paddingTop: "30px",
-              paddingRight: "5rem",
-            }}
-          >
-            <div className="mcb-label">Mostly Cost Breakdown</div>
+  GetInventoryAtom.resources.forEach((resource) => {
+    const resourceType = resource.type;
+    const cost = resource.cost;
 
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart width={400} height={400}>
-                <Pie
-                  dataKey="value"
-                  isAnimationActive={false}
-                  data={data01}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={40}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  label
-                />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div
-            className="costexplorerGrid"
-            style={{
-              marginLeft: "140px",
-              paddingTop: "30px",
-              paddingRight: "5rem",
-            }}
-          >
-            <div className="mcb-label">Cost Explorer</div>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                width={500}
-                height={300}
-                data={barchartdummy}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="DynomoDB" fill="#8884d8" />
-                <Bar dataKey="EC2" fill="#82ca9d" />
-                <Bar dataKey="ElasticIP" fill="#000000" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+    if (typeCosts.hasOwnProperty(resourceType)) {
+      typeCosts[resourceType] += cost;
+    } else {
+      typeCosts[resourceType] = cost;
+    }
+  });
+
+  const resultArray = [];
+
+  for (const resourceType in typeCosts) {
+    resultArray.push({ name: resourceType, value: typeCosts[resourceType] });
+  }
+
+  const currentDate = new Date();
+  const currentYearMonth = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+
+  const CostExplorerObject = {
+      name: currentYearMonth,
+  };
+
+  for (const resourceType in typeCosts) {
+     CostExplorerObject[resourceType] = typeCosts[resourceType];
+  }
+
+  const CostExplorerArray = [CostExplorerObject];
+
+  let idnum = countUniqueIds(GetInventoryAtom.resources).toString();
+
+  return (
+    <>
+      <div className="dashboardscreen">
+        <DashboardLabel>Dashboard</DashboardLabel>
+        <div
+          className="dashboardGrid"
+          style={{
+            marginLeft: "140px",
+            paddingTop: "110px",
+            paddingRight: "5rem",
+          }}
+        >
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Users"
+            SecondaryTitle={idnum}
+            Content="Users"
+          />
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Regions"
+            SecondaryTitle={GetInventoryAtom.resources.length.toString()}
+            Content="Regions"
+          />
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Resources"
+            SecondaryTitle={GetInventoryAtom.resources.length.toString()}
+            Content="Resources"
+          />{" "}
+          <DashboardUpperCards
+            key={1}
+            HeaderTitle="Bills"
+            SecondaryTitle={GetInventoryAtom.resources.length.toString()}
+            Content="Bills"
+          />
         </div>
-      </>
-    );
+        <div
+          className="mapchartGrid"
+          style={{
+            marginLeft: "140px",
+            paddingTop: "30px",
+            paddingRight: "5rem",
+          }}
+        >
+          <div className="mcb-label">Mostly Cost Breakdown</div>
+
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart width={400} height={400}>
+              <Pie
+                dataKey="value"
+                isAnimationActive={false}
+                data={resultArray}
+                cx="50%"
+                cy="50%"
+                innerRadius={40}
+                outerRadius={80}
+                fill="#8884d8"
+                label
+              />
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div
+          className="costexplorerGrid"
+          style={{
+            marginLeft: "140px",
+            paddingTop: "30px",
+            paddingRight: "5rem",
+          }}
+        >
+          <div className="mcb-label">Cost Explorer</div>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              width={500}
+              height={300}
+              data={CostExplorerArray}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="AWS" fill="#8884d8" />
+              <Bar dataKey="on-prem" fill="#82ca9d" />
+              <Bar dataKey="OCI" fill="#000000" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default Dashboard;
