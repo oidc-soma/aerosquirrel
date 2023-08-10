@@ -59,7 +59,10 @@ function Inventory() {
   const inventoryValue = useRecoilValue(InventoryAtom);
   const setinventoryRecoilState = useSetRecoilState(InventoryAtom);
   const resetState = useResetRecoilState(InventoryAtom);
-
+  const LogoutFunction = () => {
+    sessionStorage.removeItem("token");
+    navigation("/welcome");
+  };
   // setinventoryRecoilState({
   //   'resources': [
   //     {
@@ -103,6 +106,9 @@ function Inventory() {
 
         {/* <p>{JSON.stringify(inventoryValue)}</p> */}
       </div>
+      <a className="logout" onClick={LogoutFunction}>
+        Logout
+      </a>
     </>
   );
 }

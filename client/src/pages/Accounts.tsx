@@ -40,6 +40,11 @@ function Accounts() {
     setshowCredPopup(false);
   };
 
+  const LogoutFunction = () => {
+    sessionStorage.removeItem("token");
+    navigation("/welcome");
+  };
+
   const DocumentTitle: HTMLTitleElement | null =
     document.querySelector("title");
 
@@ -123,6 +128,9 @@ function Accounts() {
           <Cards key={i} HeaderTitle="TEST" SecondaryTitle="TEST" Content="TEST" />
         ))} */}
         </div>
+        <a className="logout" onClick={LogoutFunction}>
+          Logout
+        </a>
       </div>
     </>
     // <nav className="fixed bottom-0 left-0 top-0 z-20 flex w-[88px] flex-col gap-6 bg-purplin-850 px-5 py-8 dark:bg-black-900 pt-16">
