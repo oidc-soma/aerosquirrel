@@ -1,3 +1,20 @@
+/*
+ * Copyright 2023 The AeroSquirrel Authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Package handlers provides handlers for the application.
 package handlers
 
 import (
@@ -15,6 +32,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// CreateUser creates a user.
 func (h *ApiHandler) CreateUser(c *gin.Context) {
 	var user models.User
 
@@ -39,6 +57,7 @@ func (h *ApiHandler) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
+// Login logs in a user.
 func (h *ApiHandler) Login(c *gin.Context) {
 	var user models.User
 
@@ -83,6 +102,7 @@ func (h *ApiHandler) Login(c *gin.Context) {
 	}{Token: tokenString})
 }
 
+// GetUsers gets all users.
 func (h *ApiHandler) GetUsers(c *gin.Context) {
 	user, err := h.GetCurrentUser(c)
 	if err != nil {
@@ -99,6 +119,7 @@ func (h *ApiHandler) GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+// GetUser gets a user.
 func (h *ApiHandler) GetUser(c *gin.Context) {
 	user, err := h.db.FindUser(context.Background(), c.Param("id"))
 	if err != nil && err.Error() != "mongo: no documents in result" {
@@ -115,6 +136,7 @@ func (h *ApiHandler) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// GetCurrentUser gets the current user.
 func (h *ApiHandler) GetCurrentUser(c *gin.Context) (*models.User, error) {
 	userId, exists := c.Get("userId")
 	if !exists {
@@ -129,6 +151,7 @@ func (h *ApiHandler) GetCurrentUser(c *gin.Context) (*models.User, error) {
 	return user, nil
 }
 
+// UpdateUser updates a user.
 func (h *ApiHandler) UpdateUser(c *gin.Context) {
 	var user models.User
 	var objectId *primitive.ObjectID
@@ -169,6 +192,7 @@ func (h *ApiHandler) UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// DeleteUser deletes a user.
 func (h *ApiHandler) DeleteUser(c *gin.Context) {
 	err := h.db.DeleteUser(context.Background(), c.Param("id"))
 	if err != nil {

@@ -1,26 +1,51 @@
+/*
+ * Copyright 2023 The AeroSquirrel Authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Package database provides a client for interacting with the database.
 package database
 
 import (
 	"context"
-	"github.com/oidc-soma/aerosquirrel/server/models"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/oidc-soma/aerosquirrel/server/models"
 )
 
 const (
+	// AeroSquirrelDatabase is the name of the database.
 	AeroSquirrelDatabase = "aerosquirrel"
 
-	TeamCollection     = "teams"
-	UserCollection     = "users"
+	// TeamCollection is the name of the team collection.
+	TeamCollection = "teams"
+	// UserCollection is the name of the user collection.
+	UserCollection = "users"
+	// ResourceCollection is the name of the resource collection.
 	ResourceCollection = "resources"
 )
 
+// Client is a client for interacting with the database.
 type Client struct {
 	client *mongo.Client
 }
 
+// Dial dials the database.
 func Dial(ctx context.Context, uri ...string) (*Client, error) {
 	URI := "mongodb://localhost:27017"
 	if len(uri) != 0 {
@@ -38,6 +63,7 @@ func Close(ctx context.Context, m *Client) error {
 	return m.client.Disconnect(ctx)
 }
 
+// CreateTeam creates a new team in the database.
 func (m *Client) CreateTeam(ctx context.Context, team *models.Team) error {
 	res, err := m.client.Database(AeroSquirrelDatabase).Collection(TeamCollection).InsertOne(ctx, team)
 	if err != nil {
@@ -49,6 +75,7 @@ func (m *Client) CreateTeam(ctx context.Context, team *models.Team) error {
 	return nil
 }
 
+// FindTeams finds all teams in the database.
 func (m *Client) FindTeams(ctx context.Context) ([]*models.Team, error) {
 	var teams []*models.Team
 
@@ -65,6 +92,7 @@ func (m *Client) FindTeams(ctx context.Context) ([]*models.Team, error) {
 	return teams, nil
 }
 
+// FindTeam finds a team in the database.
 func (m *Client) FindTeam(ctx context.Context, id string) (*models.Team, error) {
 	var team *models.Team
 
@@ -81,6 +109,7 @@ func (m *Client) FindTeam(ctx context.Context, id string) (*models.Team, error) 
 	return team, nil
 }
 
+// UpdateTeam updates a team in the database.
 func (m *Client) UpdateTeam(ctx context.Context, id string, team *models.Team) (*primitive.ObjectID, error) {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -95,6 +124,7 @@ func (m *Client) UpdateTeam(ctx context.Context, id string, team *models.Team) (
 	return &objectId, nil
 }
 
+// DeleteTeam deletes a team in the database.
 func (m *Client) DeleteTeam(ctx context.Context, id string) error {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -109,6 +139,7 @@ func (m *Client) DeleteTeam(ctx context.Context, id string) error {
 	return nil
 }
 
+// AddUserToTeam adds a user to a team in the database.
 func (m *Client) AddUserToTeam(ctx context.Context, id string, userId string) error {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -121,10 +152,14 @@ func (m *Client) AddUserToTeam(ctx context.Context, id string, userId string) er
 	}
 
 	_, err = m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).UpdateOne(ctx, bson.M{"_id": userIdObjectId}, bson.M{"$set": bson.M{"teamId": objectId}})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
+// CreateUser creates a new user in the database.
 func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
 	res, err := m.client.Database(AeroSquirrelDatabase).Collection(UserCollection).InsertOne(ctx, user)
 	if err != nil {
@@ -136,6 +171,7 @@ func (m *Client) CreateUser(ctx context.Context, user *models.User) error {
 	return nil
 }
 
+// FindUserByUsername finds a user in the database.
 func (m *Client) FindUserByUsername(ctx context.Context, username string) (*models.User, error) {
 	var user *models.User
 
@@ -147,6 +183,7 @@ func (m *Client) FindUserByUsername(ctx context.Context, username string) (*mode
 	return user, nil
 }
 
+// FindUsersByTeamId finds all users in the database.
 func (m *Client) FindUsersByTeamId(ctx context.Context, teamId string) ([]*models.User, error) {
 	var users []*models.User
 
@@ -168,6 +205,7 @@ func (m *Client) FindUsersByTeamId(ctx context.Context, teamId string) ([]*model
 	return users, nil
 }
 
+// FindUser finds a user in the database.
 func (m *Client) FindUser(ctx context.Context, id string) (*models.User, error) {
 	var user *models.User
 
@@ -184,6 +222,7 @@ func (m *Client) FindUser(ctx context.Context, id string) (*models.User, error) 
 	return user, nil
 }
 
+// UpdateUser updates a user in the database.
 func (m *Client) UpdateUser(ctx context.Context, id string, user *models.User) (*primitive.ObjectID, error) {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -198,6 +237,7 @@ func (m *Client) UpdateUser(ctx context.Context, id string, user *models.User) (
 	return &objectId, nil
 }
 
+// DeleteUser deletes a user in the database.
 func (m *Client) DeleteUser(ctx context.Context, id string) error {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -212,6 +252,7 @@ func (m *Client) DeleteUser(ctx context.Context, id string) error {
 	return nil
 }
 
+// CreateResource creates a resource in the database.
 func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) error {
 	res, err := m.client.Database(AeroSquirrelDatabase).Collection(ResourceCollection).InsertOne(ctx, resource)
 	if err != nil {
@@ -223,6 +264,7 @@ func (m *Client) CreateResource(ctx context.Context, resource *models.Resource) 
 	return nil
 }
 
+// BulkCreateResources creates a resource in the database.
 func (m *Client) BulkCreateResources(ctx context.Context, resources []*models.Resource) error {
 	var documents []interface{}
 
@@ -238,6 +280,7 @@ func (m *Client) BulkCreateResources(ctx context.Context, resources []*models.Re
 	return nil
 }
 
+// FindAllResourcesByTeamId finds all resources in the database.
 func (m *Client) FindAllResourcesByTeamId(ctx context.Context, teamId string) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
@@ -259,6 +302,7 @@ func (m *Client) FindAllResourcesByTeamId(ctx context.Context, teamId string) ([
 	return resources, nil
 }
 
+// FindOneResource finds a resource in the database.
 func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resource, error) {
 	var resource *models.Resource
 
@@ -275,6 +319,7 @@ func (m *Client) FindOneResource(ctx context.Context, id string) (*models.Resour
 	return resource, nil
 }
 
+// FindMultipleResources finds multiple resources in the database.
 func (m *Client) FindMultipleResources(ctx context.Context, teamId primitive.ObjectID, filters []models.Filter) ([]*models.Resource, error) {
 	var resources []*models.Resource
 
@@ -302,6 +347,7 @@ func (m *Client) FindMultipleResources(ctx context.Context, teamId primitive.Obj
 	return resources, nil
 }
 
+// UpdateOneResource updates a resource in the database.
 func (m *Client) UpdateOneResource(ctx context.Context, id string, resource *models.Resource) (*primitive.ObjectID, error) {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -316,6 +362,7 @@ func (m *Client) UpdateOneResource(ctx context.Context, id string, resource *mod
 	return &objectId, nil
 }
 
+// DeleteOneResource deletes a resource in the database.
 func (m *Client) DeleteOneResource(ctx context.Context, id string) error {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
