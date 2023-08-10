@@ -4,6 +4,12 @@
   height: 200vh;
 }
 
+.logout {
+  position: absolute;
+  top: 2vh;
+  right: 3vw;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

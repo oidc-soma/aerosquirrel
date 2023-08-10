@@ -91,6 +91,10 @@ function Dashboard() {
   const [GetInventoryAtom, SetInventoryAtom] = useRecoilState(InventoryAtom);
   const [GetCSPAtom, SetCSPAtom] = useRecoilState(CSPAtom);
   const navigation = useNavigate();
+  const LogoutFunction = () => {
+    sessionStorage.removeItem("token");
+    navigation("/welcome");
+  };
   useEffect(() => {
     localStorage.setItem("yorkie", "ciprjcqbjhd3s76qlvg0");
   }, []);
@@ -269,6 +273,9 @@ function Dashboard() {
             </BarChart>
           </ResponsiveContainer>
         </div>
+        <a className="logout" onClick={LogoutFunction}>
+          Logout
+        </a>
       </div>
     </>
   );
