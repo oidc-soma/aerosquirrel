@@ -10,7 +10,7 @@ import {
 } from "react-toasts";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useNavigate } from "react-router-dom";
 interface ChildProps {
   closePopup: () => void;
 }
@@ -30,22 +30,38 @@ function ImportCredential({ closePopup }: ChildProps) {
   };
 
   const [FileExist, setFileExist] = useState(null);
+  const [FileContent, setFileContent] = useState("");
+  const navigation = useNavigate();
 
   const handleFileMount = (e: any) => {
     setFileExist(e.target.files[0]);
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const content = e.target.result;
+      setFileContent(content);
+    };
+    let content = reader.readAsText(e.target.files[0]);
+    console.log(FileContent);
   };
 
   const handleUpload = () => {
     if (FileExist) {
       const formData = new FormData();
       formData.append("file", FileExist);
+      const LoginToken = sessionStorage.getItem("token");
+
+      const parameters = {
+        csp: FileContent,
+      };
 
       axios
-        .post("http://{{url}}/api/v1/resources/import?csp=oci", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .get(
+          "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/resources/import",
+          {
+            params: parameters,
+            headers: { Authorization: `Bearer ${LoginToken}` },
+          }
+        )
         .then((res) => {
           if (res.status === 200) {
             toast("Imported Credential successfully.", {
@@ -58,6 +74,7 @@ function ImportCredential({ closePopup }: ChildProps) {
               progress: undefined,
               theme: "light",
             });
+            closePopup();
           } else {
             toast("Something went wrong, please try again.", {
               position: "top-right",
