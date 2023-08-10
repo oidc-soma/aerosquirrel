@@ -56,4 +56,32 @@ thead {
     width: 80%;
 }
 
+.tagkey{
+    background-color: #DFCCFB;
+    border-radius: 7px;
+    font-size: 10px;
+    padding: 3px;
+}
 
+.tagvalue{
+    color: white;
+    background-color: #35155D ;
+    border-radius: 7px;
+    font-size: 10px;
+    padding: 3px;
+}
+
+.metakey {
+    background-color: #900C3F;
+    color: white;
+    border-radius: 7px;
+    font-size: 10px;
+    padding: 3px;
+}
+
+.metavalue {
+    background-color: #F8DE22;
+    border-radius: 7px;
+    font-size: 10px;
+    padding: 3px;
+}
