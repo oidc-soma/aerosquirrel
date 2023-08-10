@@ -1,3 +1,4 @@
+// Package developerservices provides a client for interacting with the developer services.
 package developerservices
 
 import (
@@ -8,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// FetchApplications fetches applications from the developer services.
 func FetchFunctions(ctx context.Context, applicationId *string, p oci.Provider, teamId primitive.ObjectID, functionsManagementClient functions.FunctionsManagementClient) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

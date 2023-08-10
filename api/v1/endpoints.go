@@ -1,3 +1,4 @@
+// Package v1 provides endpoints for the AeroSquirrel API.
 package v1
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/oidc-soma/aerosquirrel/server/handlers"
 )
 
+// Endpoints returns a router with all endpoints.
 func Endpoints(ctx context.Context) *gin.Engine {
 	router := gin.New()
 	router.Use(cors.Default())

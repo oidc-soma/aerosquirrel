@@ -1,3 +1,4 @@
+// Package core provides a client for fetching resource data from Kubernetes.
 package core
 
 import (
@@ -8,6 +9,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// FetchIngress fetches ingress from Kubernetes.
 func FetchIngress(ctx context.Context, p k8s.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

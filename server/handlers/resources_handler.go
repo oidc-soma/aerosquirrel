@@ -1,3 +1,4 @@
+// Package handlers provides handlers for the application.
 package handlers
 
 import (
@@ -15,11 +16,13 @@ import (
 	"reflect"
 )
 
+// ApiHandler is a handler for the API.
 type ApiHandler struct {
 	ctx context.Context
 	db  *database.Client
 }
 
+// NewApiHandler creates a new ApiHandler.
 func NewApiHandler(ctx context.Context) *ApiHandler {
 	db, err := database.Dial(ctx)
 	if err != nil {
@@ -32,6 +35,7 @@ func NewApiHandler(ctx context.Context) *ApiHandler {
 	}
 }
 
+// CreateResource creates a resource.
 func (h *ApiHandler) CreateResource(c *gin.Context) {
 	var resource models.Resource
 
@@ -50,6 +54,7 @@ func (h *ApiHandler) CreateResource(c *gin.Context) {
 	c.JSON(http.StatusCreated, resource)
 }
 
+// GetResources gets all resources.
 func (h *ApiHandler) GetResources(c *gin.Context) {
 	var resources []*models.Resource
 	var err error
@@ -63,6 +68,7 @@ func (h *ApiHandler) GetResources(c *gin.Context) {
 	c.JSON(http.StatusOK, resources)
 }
 
+// GetOneResource gets one resource.
 func (h *ApiHandler) GetOneResource(c *gin.Context) {
 	resource, err := h.db.FindOneResource(context.Background(), c.Param("id"))
 	if err != nil {
@@ -73,6 +79,7 @@ func (h *ApiHandler) GetOneResource(c *gin.Context) {
 	c.JSON(http.StatusOK, resource)
 }
 
+// UpdateResource updates a resource.
 func (h *ApiHandler) GetResourcesByFilter(c *gin.Context) {
 	var filters []models.Filter
 	var resources []*models.Resource
@@ -127,6 +134,7 @@ func (h *ApiHandler) GetResourcesByFilter(c *gin.Context) {
 	c.JSON(http.StatusOK, resources)
 }
 
+// UpdateResource updates a resource.
 func (h *ApiHandler) UpdateOneResource(c *gin.Context) {
 	var resource models.Resource
 	var objectId *primitive.ObjectID
@@ -188,6 +196,7 @@ func (h *ApiHandler) UpdateOneResource(c *gin.Context) {
 	c.JSON(http.StatusOK, resource)
 }
 
+// DeleteOneResource deletes a resource.
 func (h *ApiHandler) DeleteOneResource(c *gin.Context) {
 	err := h.db.DeleteOneResource(context.Background(), c.Param("id"))
 	if err != nil {
@@ -198,6 +207,7 @@ func (h *ApiHandler) DeleteOneResource(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// ImportCSPResources imports resources from CSP.
 func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 	csp := c.Query("csp")
 

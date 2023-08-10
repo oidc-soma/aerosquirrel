@@ -1,3 +1,4 @@
+// Package cmd provides commands for the AeroSquirrel CLI.
 package cmd
 
 import (
@@ -12,6 +13,7 @@ var rootCmd = &cobra.Command{
 	Long:  `Start the server`,
 }
 
+// Execute executes the root command.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {

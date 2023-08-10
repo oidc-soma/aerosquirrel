@@ -1,3 +1,4 @@
+// Package compute provides a client for interacting with the Oracle Cloud Infrastructure Compute service.
 package compute
 
 import (
@@ -8,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// FetchInstances fetches instances from the Oracle Cloud Infrastructure Compute service.
 func FetchInstances(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

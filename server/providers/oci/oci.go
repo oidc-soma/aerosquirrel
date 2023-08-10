@@ -1,3 +1,4 @@
+// Package oci provides a client for interacting with the Oracle Cloud Infrastructure.
 package oci
 
 import (
@@ -12,10 +13,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// Provider is a client for interacting with the Oracle Cloud Infrastructure.
 type Provider struct {
 	Client common.ConfigurationProvider
 }
 
+// FetchDataFunction is a function that fetches data from the Oracle Cloud Infrastructure.
 type FetchDataFunction func(ctx context.Context, p Provider, teamId primitive.ObjectID) ([]*models.Resource, error)
 
 var supportedServices = []FetchDataFunction{
@@ -27,12 +30,14 @@ var supportedServices = []FetchDataFunction{
 	developerservices.FetchApplications,
 }
 
+// NewProvider creates a new Provider.
 func NewProvider() *Provider {
 	return &Provider{
 		Client: common.DefaultConfigProvider(),
 	}
 }
 
+// FetchResources fetches resources from the Oracle Cloud Infrastructure.
 func (p *Provider) FetchResources(teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 	ctx := context.Background()

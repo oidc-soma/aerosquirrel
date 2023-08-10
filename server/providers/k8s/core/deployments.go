@@ -1,3 +1,4 @@
+// Package core provides a client for fetching resource data from Kubernetes.
 package core
 
 import (
@@ -8,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// FetchDeployments fetches deployments from Kubernetes.
 func FetchDeployments(ctx context.Context, p k8s.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

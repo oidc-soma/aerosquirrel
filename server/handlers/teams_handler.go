@@ -1,3 +1,4 @@
+// Package handlers provides handlers for the application.
 package handlers
 
 import (
@@ -10,6 +11,7 @@ import (
 	"net/http"
 )
 
+// CreateTeam creates a team.
 func (h *ApiHandler) CreateTeam(c *gin.Context) {
 	var team models.Team
 
@@ -41,6 +43,7 @@ func (h *ApiHandler) CreateTeam(c *gin.Context) {
 	c.JSON(http.StatusCreated, team)
 }
 
+// GetTeams gets all teams.
 func (h *ApiHandler) GetTeams(c *gin.Context) {
 	teams, err := h.db.FindTeams(context.Background())
 	if err != nil {
@@ -51,6 +54,7 @@ func (h *ApiHandler) GetTeams(c *gin.Context) {
 	c.JSON(http.StatusOK, teams)
 }
 
+// GetTeam gets a team.
 func (h *ApiHandler) GetTeam(c *gin.Context) {
 	team, err := h.db.FindTeam(context.Background(), c.Param("id"))
 	if err != nil && err.Error() != "mongo: no documents in result" {
@@ -67,6 +71,7 @@ func (h *ApiHandler) GetTeam(c *gin.Context) {
 	c.JSON(http.StatusOK, team)
 }
 
+// GetCurrentTeam gets the current team from the context.
 func (h *ApiHandler) GetCurrentTeam(c *gin.Context) (*models.Team, error) {
 	userId, exists := c.Get("userId")
 	if !exists {
@@ -86,6 +91,7 @@ func (h *ApiHandler) GetCurrentTeam(c *gin.Context) (*models.Team, error) {
 	return team, nil
 }
 
+// UpdateTeam updates a team.
 func (h *ApiHandler) UpdateTeam(c *gin.Context) {
 	var team models.Team
 	var objectId *primitive.ObjectID
@@ -120,6 +126,7 @@ func (h *ApiHandler) UpdateTeam(c *gin.Context) {
 	c.JSON(http.StatusOK, team)
 }
 
+// DeleteTeam deletes a team.
 func (h *ApiHandler) DeleteTeam(c *gin.Context) {
 	err := h.db.DeleteTeam(context.Background(), c.Param("id"))
 	if err != nil {
@@ -130,6 +137,7 @@ func (h *ApiHandler) DeleteTeam(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+// JoinTeam joins a team.
 func (h *ApiHandler) JoinTeam(c *gin.Context) {
 	userId, exists := c.Get("userId")
 	if !exists {

@@ -1,16 +1,21 @@
+// Package middleware provides middleware for the application.
 package middleware
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
-	"github.com/oidc-soma/aerosquirrel/server/models"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
+
+	"github.com/oidc-soma/aerosquirrel/server/models"
 )
 
+// JwtKey is the key used to sign JWTs.
 var JwtKey = []byte("aerosquirrel_jwt_secret_key")
 
+// TokenAuth is a middleware for authenticating a user with a JWT.
 func TokenAuth(c *gin.Context) {
 	token, err := extractBearerToken(c.Request.Header.Get("Authorization"))
 	if err != nil {

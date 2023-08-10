@@ -1,7 +1,9 @@
+// Package models provides models for the application.
 package models
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+// Resource is a resource.
 type Resource struct {
 	Id        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	TeamId    primitive.ObjectID `json:"teamId" bson:"teamId"`
@@ -17,6 +19,7 @@ type Resource struct {
 	AccountId string             `json:"accountId" bson:"accountId"`
 }
 
+// Tag is a tag.
 type Tag struct {
 	Key   string `json:"key" bson:"key"`
 	Value string `json:"value" bson:"value"`

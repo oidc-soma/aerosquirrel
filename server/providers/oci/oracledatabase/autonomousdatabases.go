@@ -1,3 +1,4 @@
+// Package oracledatabase provides a client for interacting with the Oracle Cloud Infrastructure database service.
 package oracledatabase
 
 import (
@@ -8,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// FetchAutonomousDatabases fetches autonomous databases from the Oracle Cloud Infrastructure.
 func FetchAutonomousDatabases(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

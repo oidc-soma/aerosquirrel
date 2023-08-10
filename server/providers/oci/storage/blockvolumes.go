@@ -1,3 +1,4 @@
+// Package storage contains the logic for fetching storage resources from OCI.
 package storage
 
 import (
@@ -8,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// FetchBlockVolumes fetches buckets from OCI.
 func FetchBlockVolumes(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

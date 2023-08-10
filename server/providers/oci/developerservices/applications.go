@@ -1,3 +1,4 @@
+// Package developerservices provides a client for interacting with the Oracle Cloud Infrastructure Developer Services.
 package developerservices
 
 import (
@@ -8,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// FetchApplications fetches applications from the Oracle Cloud Infrastructure Developer Services.
 func FetchApplications(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

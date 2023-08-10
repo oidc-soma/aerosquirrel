@@ -1,3 +1,4 @@
+// Package k8s provides a client for interacting with Kubernetes.
 package k8s
 
 import (
@@ -8,10 +9,12 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
+// Provider is a client for interacting with Kubernetes.
 type Provider struct {
 	Client *kubernetes.Clientset
 }
 
+// FetchDataFunction is a function that fetches data from Kubernetes.
 type FetchDataFunction func(ctx context.Context, p Provider, teamId primitive.ObjectID) ([]*models.Resource, error)
 
 var supportedServices = []FetchDataFunction{
@@ -24,12 +27,14 @@ var supportedServices = []FetchDataFunction{
 	core.FetchServices,
 }
 
+// NewProvider creates a new Provider.
 func NewProvider() *Provider {
 	return &Provider{
 		Client: nil,
 	}
 }
 
+// FetchResources fetches resources from Kubernetes.
 func (p *Provider) FetchResources(teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 	ctx := context.Background()

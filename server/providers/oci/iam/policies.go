@@ -1,3 +1,4 @@
+// Package iam provides a client for interacting with the Oracle Cloud Infrastructure Identity and Access Management service.
 package iam
 
 import (
@@ -8,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// FetchPolicies fetches policies from the Oracle Cloud Infrastructure Identity and Access Management service.
 func FetchPolicies(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 

@@ -1,3 +1,4 @@
+// Package cmd provides commands for the AeroSquirrel CLI.
 package cmd
 
 import (

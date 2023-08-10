@@ -1,3 +1,4 @@
+// Package handlers provides handlers for the application.
 package handlers
 
 import (
@@ -15,6 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// CreateUser creates a user.
 func (h *ApiHandler) CreateUser(c *gin.Context) {
 	var user models.User
 
@@ -39,6 +41,7 @@ func (h *ApiHandler) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
+// Login logs in a user.
 func (h *ApiHandler) Login(c *gin.Context) {
 	var user models.User
 
@@ -83,6 +86,7 @@ func (h *ApiHandler) Login(c *gin.Context) {
 	}{Token: tokenString})
 }
 
+// GetUsers gets all users.
 func (h *ApiHandler) GetUsers(c *gin.Context) {
 	user, err := h.GetCurrentUser(c)
 	if err != nil {
@@ -99,6 +103,7 @@ func (h *ApiHandler) GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+// GetUser gets a user.
 func (h *ApiHandler) GetUser(c *gin.Context) {
 	user, err := h.db.FindUser(context.Background(), c.Param("id"))
 	if err != nil && err.Error() != "mongo: no documents in result" {
@@ -115,6 +120,7 @@ func (h *ApiHandler) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// GetCurrentUser gets the current user.
 func (h *ApiHandler) GetCurrentUser(c *gin.Context) (*models.User, error) {
 	userId, exists := c.Get("userId")
 	if !exists {
@@ -129,6 +135,7 @@ func (h *ApiHandler) GetCurrentUser(c *gin.Context) (*models.User, error) {
 	return user, nil
 }
 
+// UpdateUser updates a user.
 func (h *ApiHandler) UpdateUser(c *gin.Context) {
 	var user models.User
 	var objectId *primitive.ObjectID
@@ -169,6 +176,7 @@ func (h *ApiHandler) UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// DeleteUser deletes a user.
 func (h *ApiHandler) DeleteUser(c *gin.Context) {
 	err := h.db.DeleteUser(context.Background(), c.Param("id"))
 	if err != nil {
