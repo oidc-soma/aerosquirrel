@@ -23,6 +23,7 @@ import (
 	"github.com/gin-gonic/gin"
 	database "github.com/oidc-soma/aerosquirrel/server/database/mongo"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"github.com/oidc-soma/aerosquirrel/server/providers/aws"
 	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -236,6 +237,9 @@ func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 
 	// TODO(krapie): CSP credentials들을 어떤 방식으로 받아 올 것인지 고민해야 함
 	switch csp {
+	case "aws":
+		awsClient := aws.NewProvider()
+		resources, err = awsClient.FetchResources(team.Id)
 	case "oci":
 		ociClient := oci.NewProvider()
 		resources, err = ociClient.FetchResources(team.Id)
