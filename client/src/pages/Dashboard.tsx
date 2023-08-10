@@ -2,26 +2,19 @@
 // @ts-nocheck
 
 import React from 'react';
-import Cards from '../components/cards/Cards';
 import './Dashboard.css';
 import styled from 'styled-components';
-import ReactDOM from 'react-dom';
 import {useNavigate} from 'react-router-dom';
 import DashboardUpperCards from '../components/cards/DashboardUpperCards';
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import {BarChart, Bar, Cell, XAxis, YAxis } from 'recharts';
-import Editor from '../components/yorkie-tldraw/Editor';
+import {BarChart, Bar, XAxis, YAxis } from 'recharts';
 import { useEffect } from 'react';
 import axios from 'axios';
 import {
   useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
 } from "recoil";
 import { CSPAtom, InventoryAtom } from '../atoms';
 import { toast } from "react-toastify";
-import { result } from 'cypress/types/lodash';
 
 
 const DashboardLabel = styled.h1`
@@ -133,14 +126,9 @@ function Dashboard() {
             "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/configs/csps",
             { headers: { Authorization: `Bearer ${LoginToken}` } }
           ).then(function (response) {
-            //console.log(response.data);
             SetCSPAtom(response.data);
           })
 
-          
-
-          
-          //SetInventoryAtom(InventoryLSTData);
     }, []);
 
 
@@ -159,15 +147,9 @@ function Dashboard() {
 
     const resultArray = [];
 
-for (const resourceType in typeCosts) {
-  resultArray.push({ name: resourceType, value: typeCosts[resourceType] });
-}
-
-    console.log(resultArray);
-
-    console.log(GetInventoryAtom.resources);
-    console.log(GetInventoryAtom.resources.length.toString());
-          
+    for (const resourceType in typeCosts) {
+      resultArray.push({ name: resourceType, value: typeCosts[resourceType] });
+    }
 
     let idnum = countUniqueIds(GetInventoryAtom.resources).toString();
 
