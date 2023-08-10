@@ -21,6 +21,7 @@ import {
 } from "recoil";
 import { CSPAtom, InventoryAtom } from '../atoms';
 import { toast } from "react-toastify";
+import { result } from 'cypress/types/lodash';
 
 
 const DashboardLabel = styled.h1`
@@ -127,7 +128,7 @@ function Dashboard() {
             .then(function (response) {
               SetInventoryAtom(response.data);
             });
-
+            
           axios.get(
             "https://8ab30ea2-e8d1-4c0a-b748-5ec1e2e858c0.mock.pstmn.io/api/v1/configs/csps",
             { headers: { Authorization: `Bearer ${LoginToken}` } }
@@ -135,11 +136,38 @@ function Dashboard() {
             //console.log(response.data);
             SetCSPAtom(response.data);
           })
+
+          
+
+          
           //SetInventoryAtom(InventoryLSTData);
     }, []);
 
+
+    const typeCosts = {};
+
+    GetInventoryAtom.resources.forEach((resource) => {
+      const resourceType = resource.type;
+      const cost = resource.cost;
+
+      if (typeCosts.hasOwnProperty(resourceType)) {
+        typeCosts[resourceType] += cost;
+      } else {
+        typeCosts[resourceType] = cost;
+      }
+    });
+
+    const resultArray = [];
+
+for (const resourceType in typeCosts) {
+  resultArray.push({ name: resourceType, value: typeCosts[resourceType] });
+}
+
+    console.log(resultArray);
+
     console.log(GetInventoryAtom.resources);
     console.log(GetInventoryAtom.resources.length.toString());
+          
 
     let idnum = countUniqueIds(GetInventoryAtom.resources).toString();
 
@@ -195,7 +223,7 @@ function Dashboard() {
                 <Pie
                   dataKey="value"
                   isAnimationActive={false}
-                  data={data01}
+                  data= {resultArray}
                   cx="50%"
                   cy="50%"
                   innerRadius={40}
