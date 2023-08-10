@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const SettingsLabel = styled.h1`
   position: absolute;
@@ -14,7 +14,7 @@ const PrefLabel = styled.h1`
   left: 8rem;
   top: 5rem;
   font-size: 15px;
-`
+`;
 
 const UserNameLabel = styled.h1`
   position: absolute;
@@ -31,40 +31,39 @@ const UserNameContentLabel = styled.h1`
 `;
 
 const Hr = styled.hr`
-    position: absolute;
-    left: 0px;
-    top: 20rem;
-    width: 2px;
+  position: absolute;
+  left: 0px;
+  top: 20rem;
+  width: 2px;
 `;
 
 const UserBillLine = styled.div`
-    position: absolute;
-    left: 300px;
-    top: 20rem;
-    background-color: black;
-`
+  position: absolute;
+  left: 300px;
+  top: 20rem;
+  background-color: black;
+`;
 
 function Settings() {
+  const DocumentTitle: HTMLTitleElement | null =
+    document.querySelector("title");
 
-      const DocumentTitle: HTMLTitleElement | null =
-        document.querySelector("title");
+  if (!DocumentTitle) {
+    throw new Error("No document title error");
+  }
+  DocumentTitle.innerText = "Settings - Aerosquirrel";
 
-      if (!DocumentTitle) {
-        throw new Error("No document title error");
-      }
-      DocumentTitle.innerText = "Settings - Aerosquirrel";
+  return (
+    <>
+      <SettingsLabel>Settings</SettingsLabel>
+      <PrefLabel>Profile</PrefLabel>
+      <UserNameLabel>Username </UserNameLabel>
+      <UserNameContentLabel>TestUSER</UserNameContentLabel>
+      <UserBillLine>___</UserBillLine>
 
-    return(
-        <>
-        <SettingsLabel>Settings</SettingsLabel>
-        <PrefLabel>Profile</PrefLabel>
-        <UserNameLabel>Username </UserNameLabel>
-        <UserNameContentLabel>TestUSER</UserNameContentLabel>
-        <UserBillLine>___</UserBillLine>
-        
-        <hr />
-        </>
-    )
+      <hr />
+    </>
+  );
 }
 
 export default Settings;

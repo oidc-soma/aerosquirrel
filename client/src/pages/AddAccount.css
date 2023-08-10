@@ -1,26 +1,26 @@
-.AddAccountBackground{
-    position: absolute;
-    background-color: white;
-    top: 7vh;
-    left: 19vw;
-    position: absolute;
-    z-index: 1;
-    padding: 7rem;
-    border-radius: 10px;
-    box-shadow: 7px 7px 30px grey;
+.AddAccountBackground {
+  position: absolute;
+  background-color: white;
+  top: 7vh;
+  left: 19vw;
+  position: absolute;
+  z-index: 1;
+  padding: 7rem;
+  border-radius: 10px;
+  box-shadow: 7px 7px 30px grey;
 }
 
 .btn-close {
-    position: absolute;
-    right: 2rem;
-    top: 2rem;
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
 }
 
 .ADDARINPUT {
-    position: relative;
-    width: 23vw;
-    border-radius: 5px;
-    border: 1px solid #00C3FF;
-    height: 40px;
-    font-size: 15px;
+  position: relative;
+  width: 23vw;
+  border-radius: 5px;
+  border: 1px solid #00c3ff;
+  height: 40px;
+  font-size: 15px;
 }

@@ -1,53 +1,52 @@
 .dashboardGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 20px;
-    animation: fadeIn 0.5s ease-in-out forwards;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 .mapchartGrid {
-    position: relative;
-    border-radius: 10px;
-    box-shadow: 10px 10px 30px grey;
-    margin-top: 2rem;
-    margin-right: 5rem;
-    height: 300px;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 10px 10px 30px grey;
+  margin-top: 2rem;
+  margin-right: 5rem;
+  height: 300px;
 }
 
 .costexplorerGrid {
-    position: relative;
-    border-radius: 10px;
-    box-shadow: 10px 10px 30px grey;
-    margin-top: 2rem;
-    margin-right: 5rem;
-    height: 300px;
-    margin-bottom : 3rem;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 10px 10px 30px grey;
+  margin-top: 2rem;
+  margin-right: 5rem;
+  height: 300px;
+  margin-bottom: 3rem;
 }
 
-.DashboardTitle{
-    position: absolute;
-    left: 8rem;
-    top: 1rem;
-    font-size: 20px;
+.DashboardTitle {
+  position: absolute;
+  left: 8rem;
+  top: 1rem;
+  font-size: 20px;
 }
 
 .mcb-label {
-    position: absolute;
-    left: 30px;
-    top: 23px;
-    
+  position: absolute;
+  left: 30px;
+  top: 23px;
 }
 
-.dashboardscreen{
-    position: relative;
+.dashboardscreen {
+  position: relative;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
