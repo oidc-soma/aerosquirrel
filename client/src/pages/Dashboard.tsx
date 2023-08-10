@@ -1,21 +1,25 @@
 // @ts-ignore
 // @ts-nocheck
 
-import React from 'react';
-import './Dashboard.css';
-import styled from 'styled-components';
-import {useNavigate} from 'react-router-dom';
-import DashboardUpperCards from '../components/cards/DashboardUpperCards';
-import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import {BarChart, Bar, XAxis, YAxis } from 'recharts';
-import { useEffect } from 'react';
-import axios from 'axios';
+import React from "react";
+import "./Dashboard.css";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import DashboardUpperCards from "../components/cards/DashboardUpperCards";
 import {
-  useRecoilState,
-} from "recoil";
-import { CSPAtom, InventoryAtom } from '../atoms';
+  PieChart,
+  Pie,
+  Legend,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+import { BarChart, Bar, XAxis, YAxis } from "recharts";
+import { useEffect } from "react";
+import axios from "axios";
+import { useRecoilState } from "recoil";
+import { CSPAtom, InventoryAtom } from "../atoms";
 import { toast } from "react-toastify";
-
 
 const DashboardLabel = styled.h1`
   position: absolute;
@@ -69,7 +73,7 @@ const barchartdummy = [
   },
 ];
 
-function countUniqueIds(objectsArray:{}[]) {
+function countUniqueIds(objectsArray: {}[]) {
   const uniqueIds = new Set();
 
   objectsArray.forEach((obj) => {
@@ -152,14 +156,17 @@ function Dashboard() {
   }
 
   const currentDate = new Date();
-  const currentYearMonth = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+  const currentYearMonth = currentDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
 
   const CostExplorerObject = {
-      name: currentYearMonth,
+    name: currentYearMonth,
   };
 
   for (const resourceType in typeCosts) {
-     CostExplorerObject[resourceType] = typeCosts[resourceType];
+    CostExplorerObject[resourceType] = typeCosts[resourceType];
   }
 
   const CostExplorerArray = [CostExplorerObject];

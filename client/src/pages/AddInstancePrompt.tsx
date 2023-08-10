@@ -4,7 +4,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
-import { doc } from '../hooks/useMultiplayerState';
+import { doc } from "../hooks/useMultiplayerState";
 import { useState } from "react";
 import {
   useRecoilState,
@@ -23,7 +23,7 @@ import {
   TDUser,
   TldrawApp,
 } from "@tldraw/tldraw";
-import './AddInstancePrompt.css';
+import "./AddInstancePrompt.css";
 import { InstanceNameAtom, InventoryAtom } from "../atoms";
 
 export const Select = styled.select`
@@ -45,7 +45,6 @@ export const Select = styled.select`
     border-color: red;
   }
 `;
-
 
 let OPTIONS = [
   // {
@@ -69,22 +68,23 @@ let OPTIONS = [
 ];
 
 const SelectBoxWrapper = styled.div`
-	display: flex;
+  display: flex;
   animation: fadeIn 0.3s ease-in-out forwards;
 `;
 
 const SelectBox = (props: any) => {
-    	const handleChange = (e: any) => {
-        // event handler
-        console.log(e.target.value);
-      };
+  const handleChange = (e: any) => {
+    // event handler
+    console.log(e.target.value);
+  };
 
-  const [GetInstanceNameAtom, SetInstanceNameAtom] = useRecoilState(InstanceNameAtom);
+  const [GetInstanceNameAtom, SetInstanceNameAtom] =
+    useRecoilState(InstanceNameAtom);
 
-  const handleSelectChange = (event:any) => {
+  const handleSelectChange = (event: any) => {
     //console.log(event.target.value);
     SetInstanceNameAtom(event.target.value);
-  }
+  };
 
   return (
     <SelectBoxWrapper>
@@ -132,36 +132,35 @@ const ConnectLabel = styled.h1`
 interface ChildProps {
   closePrompt: () => void;
   AddInstFunction: () => void;
-};
+}
 
-function AddInstancePrompt({closePrompt, AddInstFunction}:ChildProps) {
+function AddInstancePrompt({ closePrompt, AddInstFunction }: ChildProps) {
   const [GetInventoryAtom, SetInventoryAtom] = useRecoilState(InventoryAtom);
 
-OPTIONS = GetInventoryAtom.resources;
-
+  OPTIONS = GetInventoryAtom.resources;
 
   const [AppRes, setAppRes] = useState<TldrawApp>();
 
-    const OKButtonFunction = () => {
-        AddInstFunction();
-        closePrompt();
+  const OKButtonFunction = () => {
+    AddInstFunction();
+    closePrompt();
+  };
+
+  const randomString = (length = 8) => {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let str = "";
+
+    for (let i = 0; i < length; i++) {
+      str += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    
-    const randomString = (length = 8) => {
-      const chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let str = "";
 
-      for (let i = 0; i < length; i++) {
-        str += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
+    return str;
+  };
 
-      return str;
-    };
-
-const handleClick = () => {
-  closePrompt();
-};
+  const handleClick = () => {
+    closePrompt();
+  };
 
   const ButtonFunc = () => {
     doc.update((root) => {
@@ -260,7 +259,6 @@ const handleClick = () => {
     AppRes?.replacePageContent(shapeRecord, bindingRecord, assetRecord);
   };
 
-
   return (
     <>
       <div className="AddAccountBackground">
@@ -275,15 +273,23 @@ const handleClick = () => {
         <SelectBox options={OPTIONS}></SelectBox>
         <br />
         <br />
-        <Button type="button" className="btn btn-primary" onClick={OKButtonFunction}>
+        <Button
+          type="button"
+          className="btn btn-primary"
+          onClick={OKButtonFunction}
+        >
           OK
         </Button>
-        <Button type="button" className="btn btn-secondary" onClick={handleClick}>
+        <Button
+          type="button"
+          className="btn btn-secondary"
+          onClick={handleClick}
+        >
           Cancel
         </Button>
       </div>
     </>
   );
-  }
+}
 
 export default AddInstancePrompt;

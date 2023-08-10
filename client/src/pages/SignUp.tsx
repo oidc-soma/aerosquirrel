@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import styled from 'styled-components';
-import Form from 'react-bootstrap/Form';
-import { Button } from 'react-bootstrap';
-import './SignUp.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import {toast, ToastContainer} from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import Form from "react-bootstrap/Form";
+import { Button } from "react-bootstrap";
+import "./SignUp.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const SignUpLabel = styled.h1`
   position: absolute;
@@ -22,12 +22,14 @@ function SignUp() {
   const [isEmailclicked, setEmailclicked] = useState<boolean>(false);
   const [isPasswordexist, setPasswordexist] = useState<boolean>(false);
   const [isPasswordclicked, setPasswordclicked] = useState<boolean>(false);
-  const [isPasswordcheckexist, setPasswordcheckexist] = useState<boolean>(false);
-  const [isPasswordcheckclicked, setPasswordcheckclicked] = useState<boolean>(false);
-  const [SignupUsername, setSignupUsername] = useState<string>('');
-  const [SignupEmail, setSignupEmail] = useState<string>('');
-  const [SignupPassword, setSignupPassword] = useState<string>('');
- 
+  const [isPasswordcheckexist, setPasswordcheckexist] =
+    useState<boolean>(false);
+  const [isPasswordcheckclicked, setPasswordcheckclicked] =
+    useState<boolean>(false);
+  const [SignupUsername, setSignupUsername] = useState<string>("");
+  const [SignupEmail, setSignupEmail] = useState<string>("");
+  const [SignupPassword, setSignupPassword] = useState<string>("");
+
   const SignupSubmitFunction = () => {
     axios
       .post(
@@ -39,39 +41,36 @@ function SignUp() {
         }
       )
       .then(function (response) {
-        if(response.status===200)
-        {
-        sessionStorage.setItem("token", response.data.token);
-        
-        toast("Signup Complete!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        navigation('/dashboard');
-      }
-      else {
-        toast("An Error Occured, Please Try Again", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-      });
-    
-  }
+        if (response.status === 200) {
+          sessionStorage.setItem("token", response.data.token);
 
-  useEffect(()=> {
+          toast("Signup Complete!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          navigation("/dashboard");
+        } else {
+          toast("An Error Occured, Please Try Again", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      });
+  };
+
+  useEffect(() => {
     if (sessionStorage.getItem("token")) {
       toast("Already Logged in", {
         position: "top-right",

@@ -1,26 +1,24 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Route } from "react-router-dom";
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Cards from '../components/cards/Cards';
-import './Accounts.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import Cards from "../components/cards/Cards";
+import "./Accounts.css";
 import CloudProvider from "../components/cards/CloudProvider";
 import AddAccount from "./AddAccount";
-import ImportCredential from './ImportCredential';
-import {toast} from 'react-toastify';
-import {useNavigate} from 'react-router-dom';
+import ImportCredential from "./ImportCredential";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AccountsLabel = styled.h1`
-position: absolute;
-left: 8rem;
-top: 1rem;
-
-    font-size: 20px;
+  position: absolute;
+  left: 8rem;
+  top: 1rem;
+  font-size: 20px;
 `;
 
-const AddAccountButton = 
-"position: absolute; right: 5rem; top: 4rem;";
+const AddAccountButton = "position: absolute; right: 5rem; top: 4rem;";
 
 function Accounts() {
   const [showAddPopup, setshowAddPopup] = useState(false);
@@ -28,11 +26,11 @@ function Accounts() {
 
   const showPopupFunction = () => {
     setshowAddPopup(true);
-  }
+  };
 
   const showCredFunction = () => {
     setshowCredPopup(true);
-  }
+  };
 
   const closePopupFunction = () => {
     setshowAddPopup(false);
@@ -40,20 +38,20 @@ function Accounts() {
 
   const closeCredFunction = () => {
     setshowCredPopup(false);
+  };
+
+  const DocumentTitle: HTMLTitleElement | null =
+    document.querySelector("title");
+
+  if (!DocumentTitle) {
+    throw new Error("No document title error");
   }
+  DocumentTitle.innerText = "Accounts - Aerosquirrel";
 
-  const DocumentTitle: HTMLTitleElement | null = document.querySelector("title");
-
-    if (!DocumentTitle) {
-      throw new Error("No document title error");
-    }
-    DocumentTitle.innerText = "Accounts - Aerosquirrel";
-  
   const navigation = useNavigate();
 
-  useEffect(()=> {
-    if(!sessionStorage.getItem('token'))
-    {
+  useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
       toast("Please Login or Signup", {
         position: "top-right",
         autoClose: 5000,
@@ -64,8 +62,7 @@ function Accounts() {
         progress: undefined,
         theme: "light",
       });
-      navigation('/welcome');
-      
+      navigation("/welcome");
     }
   }, []);
 

@@ -1,13 +1,7 @@
-import React from 'react';
+import React from "react";
 
-function AWSDetail()
-{
-
-    return(
-        <>
-            
-        </>
-    );
+function AWSDetail() {
+  return <></>;
 }
 
 export default AWSDetail;

@@ -1,15 +1,15 @@
 .InventoryWrapper {
-    position: absolute;
-    width: 100vw;
-    height: 200vh;
+  position: absolute;
+  width: 100vw;
+  height: 200vh;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1;
-    }
+  to {
+    opacity: 1;
+  }
 }
