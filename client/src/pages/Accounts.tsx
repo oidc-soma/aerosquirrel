@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Link, Route } from "react-router-dom";
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
@@ -8,6 +8,8 @@ import './Accounts.css';
 import CloudProvider from "../components/cards/CloudProvider";
 import AddAccount from "./AddAccount";
 import ImportCredential from './ImportCredential';
+import {toast} from 'react-toastify';
+import {useNavigate} from 'react-router-dom';
 
 const AccountsLabel = styled.h1`
 position: absolute;
@@ -46,7 +48,26 @@ function Accounts() {
       throw new Error("No document title error");
     }
     DocumentTitle.innerText = "Accounts - Aerosquirrel";
+  
+  const navigation = useNavigate();
 
+  useEffect(()=> {
+    if(!sessionStorage.getItem('token'))
+    {
+      toast("Please Login or Signup", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      navigation('/welcome');
+      
+    }
+  }, []);
 
   return (
     <>

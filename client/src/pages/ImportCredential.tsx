@@ -47,10 +47,59 @@ function ImportCredential({ closePopup }: ChildProps) {
                   },
                 }
               )
-              .then((res) => console.log(res.data));
+              .then((res) => {
+                if(res.status===200)
+                {
+                   toast("Imported Credential successfully.", {
+                     position: "top-right",
+                     autoClose: 5000,
+                     hideProgressBar: false,
+                     closeOnClick: true,
+                     pauseOnHover: true,
+                     draggable: true,
+                     progress: undefined,
+                     theme: "light",
+                   });
+                }
+                else {
+                   toast("Something went wrong, please try again.", {
+                     position: "top-right",
+                     autoClose: 5000,
+                     hideProgressBar: false,
+                     closeOnClick: true,
+                     pauseOnHover: true,
+                     draggable: true,
+                     progress: undefined,
+                     theme: "light",
+                   });
+                }
+                console.log(res.data)
+              })
+              .catch((error)=>{
+                toast("Something went wrong, please try again.", {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+                closePopup();
+              })
         }
         else {
-            alert("Please Select File to Upload");
+          toast("Please Select File to Upload", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
     }
   

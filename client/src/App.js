@@ -18,6 +18,7 @@ import { InventoryAtom } from './atoms';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import AnimatedCursor from 'react-animated-cursor';
 import WelcomePage from './pages/WelcomePage';
+import {ToastContainer} from 'react-toastify';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -48,6 +49,18 @@ const AnimatedRoutes = () => {
 function App() {
   return (
     <div className="App">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <RecoilRoot>
         <BrowserRouter>
           <AnimatedRoutes />
