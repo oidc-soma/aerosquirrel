@@ -26,6 +26,7 @@ import (
 	"github.com/oidc-soma/aerosquirrel/server/providers/aws"
 	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
+	"github.com/pelletier/go-toml/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -226,16 +227,24 @@ func (h *ApiHandler) DeleteOneResource(c *gin.Context) {
 
 // ImportCSPResources imports resources from CSP.
 func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
+	var config models.Config
 	csp := c.Query("csp")
 
 	team, err := h.GetCurrentTeam(c)
 	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	var resources []*models.Resource
 
 	// TODO(krapie): CSP credentials들을 어떤 방식으로 받아 올 것인지 고민해야 함
+	err = toml.Unmarshal([]byte(csp), &config)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	switch csp {
 	case "aws":
 		awsClient := aws.NewProvider()
