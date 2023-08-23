@@ -20,16 +20,21 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	awsConfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/gin-gonic/gin"
 	database "github.com/oidc-soma/aerosquirrel/server/database/mongo"
 	"github.com/oidc-soma/aerosquirrel/server/models"
 	"github.com/oidc-soma/aerosquirrel/server/providers/aws"
 	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
+	"github.com/oracle/oci-go-sdk/common"
 	"github.com/pelletier/go-toml/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	"log"
 	"net/http"
 	"reflect"
 )
@@ -238,27 +243,79 @@ func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 
 	var resources []*models.Resource
 
-	// TODO(krapie): CSP credentials들을 어떤 방식으로 받아 올 것인지 고민해야 함
 	err = toml.Unmarshal([]byte(csp), &config)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	switch csp {
-	case "aws":
-		awsClient := aws.NewProvider()
-		resources, err = awsClient.FetchResources(team.Id)
-	case "oci":
-		ociClient := oci.NewProvider()
-		resources, err = ociClient.FetchResources(team.Id)
-	case "k8s":
-		k8sClient := k8s.NewProvider()
-		resources, err = k8sClient.FetchResources(team.Id)
-	}
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	if len(config.AWS) > 0 {
+		awsProviders := make([]aws.Provider, 0)
+		for _, account := range config.AWS {
+			if account.Source == "CREDENTIALS_FILE" {
+				if len(account.Path) > 0 {
+					cfg, err := awsConfig.LoadDefaultConfig(context.Background(), awsConfig.WithSharedConfigProfile(account.Profile), awsConfig.WithSharedCredentialsFiles(
+						[]string{account.Path},
+					))
+					if err != nil {
+						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+						return
+					}
+					awsProviders = append(awsProviders, aws.Provider{
+						Client: &cfg,
+					})
+				} else {
+					cfg, err := awsConfig.LoadDefaultConfig(context.Background(), awsConfig.WithSharedConfigProfile(account.Profile))
+					if err != nil {
+						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+						return
+					}
+					awsProviders = append(awsProviders, aws.Provider{
+						Client: &cfg,
+					})
+				}
+			} else if account.Source == "ENVIRONMENT_VARIABLES" {
+				cfg, err := awsConfig.LoadDefaultConfig(context.Background())
+				if err != nil {
+					log.Fatal(err)
+				}
+				awsProviders = append(awsProviders, aws.Provider{
+					Client: &cfg,
+				})
+			}
+		}
+		resources, err = aws.FetchResources(awsProviders, team.Id)
+	} else if len(config.OCI) > 0 {
+		ociProviders := make([]oci.Provider, 0)
+		for _, account := range config.OCI {
+			if account.Source == "CREDENTIALS_FILE" {
+				client := common.DefaultConfigProvider()
+				ociProviders = append(ociProviders, oci.Provider{
+					Client: client,
+				})
+			}
+		}
+		resources, err = oci.FetchResources(ociProviders, team.Id)
+	} else if len(config.Kubernetes) > 0 {
+		k8sProviders := make([]k8s.Provider, 0)
+		for _, account := range config.Kubernetes {
+			kubeConfig, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+				&clientcmd.ClientConfigLoadingRules{ExplicitPath: account.Path},
+				&clientcmd.ConfigOverrides{}).ClientConfig()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			client, err := kubernetes.NewForConfig(kubeConfig)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			k8sProviders = append(k8sProviders, k8s.Provider{
+				Client: client,
+			})
+		}
+		resources, err = k8s.FetchResources(k8sProviders, team.Id)
 	}
 
 	err = h.db.BulkCreateResources(context.Background(), resources)

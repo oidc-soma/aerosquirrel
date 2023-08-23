@@ -46,24 +46,18 @@ var supportedServices = []FetchDataFunction{
 	developerservices.FetchApplications,
 }
 
-// NewProvider creates a new Provider.
-func NewProvider() *Provider {
-	return &Provider{
-		Client: common.DefaultConfigProvider(),
-	}
-}
-
 // FetchResources fetches resources from the Oracle Cloud Infrastructure.
-func (p *Provider) FetchResources(teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchResources(providers []Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 	ctx := context.Background()
-
-	for _, service := range supportedServices {
-		ociResources, err := service(ctx, *p, teamId)
-		if err != nil {
-			return resources, err
+	for _, provider := range providers {
+		for _, service := range supportedServices {
+			ociResources, err := service(ctx, provider, teamId)
+			if err != nil {
+				return resources, err
+			}
+			resources = append(resources, ociResources...)
 		}
-		resources = append(resources, ociResources...)
 	}
 
 	return resources, nil

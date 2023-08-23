@@ -20,22 +20,18 @@ var supportedServices = []FetchDataFunction{
 	ec2.FetchInstances,
 }
 
-func NewProvider() *Provider {
-	return &Provider{
-		Client: nil,
-	}
-}
-
-func (p *Provider) FetchResources(teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchResources(providers []Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 	ctx := context.Background()
 
-	for _, service := range supportedServices {
-		awsResources, err := service(ctx, *p, teamId)
-		if err != nil {
-			return resources, err
+	for _, provider := range providers {
+		for _, service := range supportedServices {
+			awsResources, err := service(ctx, provider, teamId)
+			if err != nil {
+				return resources, err
+			}
+			resources = append(resources, awsResources...)
 		}
-		resources = append(resources, awsResources...)
 	}
 
 	return resources, nil
