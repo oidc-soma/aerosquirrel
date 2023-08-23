@@ -20,19 +20,19 @@ package core
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // FetchServiceAccounts fetches service accounts from Kubernetes.
-func FetchServiceAccounts(ctx context.Context, p k8s.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchServiceAccounts(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
 	var config v1.ListOptions
 
 	for {
-		res, err := p.Client.CoreV1().ServiceAccounts("").List(ctx, config)
+		res, err := p.K8sClient.CoreV1().ServiceAccounts("").List(ctx, config)
 		if err != nil {
 			return nil, err
 		}

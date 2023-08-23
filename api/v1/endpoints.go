@@ -30,7 +30,13 @@ import (
 // Endpoints returns a router with all endpoints.
 func Endpoints(ctx context.Context) *gin.Engine {
 	router := gin.New()
-	router.Use(cors.Default())
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET, POST, PUT, PATCH, DELETE, OPTIONS"},
+		AllowHeaders:     []string{"Origin, Content-Type, Content-Length, Accept-Encoding, Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * 60 * 60,
+	}))
 
 	apiHandler := handlers.NewApiHandler(ctx)
 

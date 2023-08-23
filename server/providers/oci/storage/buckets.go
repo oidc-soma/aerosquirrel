@@ -20,21 +20,21 @@ package storage
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"github.com/oracle/oci-go-sdk/objectstorage"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // FetchBuckets fetches buckets from OCI.
-func FetchBuckets(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchBuckets(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
-	objectStorageClient, err := objectstorage.NewObjectStorageClientWithConfigurationProvider(p.Client)
+	objectStorageClient, err := objectstorage.NewObjectStorageClientWithConfigurationProvider(p.OciClient)
 	if err != nil {
 		return resources, err
 	}
 
-	tenancyOCID, err := p.Client.TenancyOCID()
+	tenancyOCID, err := p.OciClient.TenancyOCID()
 	if err != nil {
 		return resources, err
 	}
@@ -68,7 +68,7 @@ func FetchBuckets(ctx context.Context, p oci.Provider, teamId primitive.ObjectID
 			})
 		}
 
-		region, err := p.Client.Region()
+		region, err := p.OciClient.Region()
 		if err != nil {
 			return resources, err
 		}

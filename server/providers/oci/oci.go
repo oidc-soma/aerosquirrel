@@ -20,24 +20,16 @@ package oci
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci/compute"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci/developerservices"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci/iam"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci/oracledatabase"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci/storage"
-	"github.com/oracle/oci-go-sdk/common"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// Provider is a client for interacting with the Oracle Cloud Infrastructure.
-type Provider struct {
-	Client common.ConfigurationProvider
-}
-
-// FetchDataFunction is a function that fetches data from the Oracle Cloud Infrastructure.
-type FetchDataFunction func(ctx context.Context, p Provider, teamId primitive.ObjectID) ([]*models.Resource, error)
-
-var supportedServices = []FetchDataFunction{
+var supportedServices = []providers.FetchDataFunction{
 	compute.FetchInstances,
 	iam.FetchPolicies,
 	oracledatabase.FetchAutonomousDatabases,
@@ -47,7 +39,7 @@ var supportedServices = []FetchDataFunction{
 }
 
 // FetchResources fetches resources from the Oracle Cloud Infrastructure.
-func FetchResources(providers []Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchResources(providers []providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 	ctx := context.Background()
 	for _, provider := range providers {

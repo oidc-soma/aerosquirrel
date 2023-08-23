@@ -20,19 +20,19 @@ package core
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // FetchPods fetches pods from Kubernetes.
-func FetchPods(ctx context.Context, p k8s.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchPods(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
 	var config v1.ListOptions
 
 	for {
-		res, err := p.Client.CoreV1().Pods("").List(ctx, config)
+		res, err := p.K8sClient.CoreV1().Pods("").List(ctx, config)
 		if err != nil {
 			return nil, err
 		}

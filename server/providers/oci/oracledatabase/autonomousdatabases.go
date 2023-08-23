@@ -20,21 +20,21 @@ package oracledatabase
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"github.com/oracle/oci-go-sdk/database"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // FetchAutonomousDatabases fetches autonomous databases from the Oracle Cloud Infrastructure.
-func FetchAutonomousDatabases(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchAutonomousDatabases(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
-	databaseClient, err := database.NewDatabaseClientWithConfigurationProvider(p.Client)
+	databaseClient, err := database.NewDatabaseClientWithConfigurationProvider(p.OciClient)
 	if err != nil {
 		return resources, err
 	}
 
-	tenancyOCID, err := p.Client.TenancyOCID()
+	tenancyOCID, err := p.OciClient.TenancyOCID()
 	if err != nil {
 		return resources, err
 	}
@@ -58,7 +58,7 @@ func FetchAutonomousDatabases(ctx context.Context, p oci.Provider, teamId primit
 			})
 		}
 
-		region, err := p.Client.Region()
+		region, err := p.OciClient.Region()
 		if err != nil {
 			return resources, err
 		}

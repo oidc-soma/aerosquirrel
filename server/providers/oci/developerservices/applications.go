@@ -20,21 +20,21 @@ package developerservices
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"github.com/oracle/oci-go-sdk/functions"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // FetchApplications fetches applications from the Oracle Cloud Infrastructure Developer Services.
-func FetchApplications(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchApplications(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
-	functionsManagementClient, err := functions.NewFunctionsManagementClientWithConfigurationProvider(p.Client)
+	functionsManagementClient, err := functions.NewFunctionsManagementClientWithConfigurationProvider(p.OciClient)
 	if err != nil {
 		return resources, err
 	}
 
-	tenancyOCID, err := p.Client.TenancyOCID()
+	tenancyOCID, err := p.OciClient.TenancyOCID()
 	if err != nil {
 		return resources, err
 	}
@@ -58,7 +58,7 @@ func FetchApplications(ctx context.Context, p oci.Provider, teamId primitive.Obj
 			})
 		}
 
-		region, err := p.Client.Region()
+		region, err := p.OciClient.Region()
 		if err != nil {
 			return resources, err
 		}

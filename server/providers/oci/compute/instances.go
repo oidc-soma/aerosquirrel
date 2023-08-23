@@ -20,21 +20,21 @@ package compute
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"github.com/oracle/oci-go-sdk/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // FetchInstances fetches instances from the Oracle Cloud Infrastructure Compute service.
-func FetchInstances(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchInstances(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
-	computeClient, err := core.NewComputeClientWithConfigurationProvider(p.Client)
+	computeClient, err := core.NewComputeClientWithConfigurationProvider(p.OciClient)
 	if err != nil {
 		return nil, err
 	}
 
-	tenancyOCID, err := p.Client.TenancyOCID()
+	tenancyOCID, err := p.OciClient.TenancyOCID()
 	if err != nil {
 		return resources, err
 	}
