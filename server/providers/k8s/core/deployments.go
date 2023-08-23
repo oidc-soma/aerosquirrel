@@ -20,19 +20,19 @@ package core
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // FetchDeployments fetches deployments from Kubernetes.
-func FetchDeployments(ctx context.Context, p k8s.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchDeployments(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
 	var config v1.ListOptions
 
 	for {
-		res, err := p.Client.AppsV1().Deployments("").List(ctx, config)
+		res, err := p.K8sClient.AppsV1().Deployments("").List(ctx, config)
 		if err != nil {
 			return nil, err
 		}

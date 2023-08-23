@@ -20,21 +20,21 @@ package iam
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"github.com/oracle/oci-go-sdk/identity"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // FetchPolicies fetches policies from the Oracle Cloud Infrastructure Identity and Access Management service.
-func FetchPolicies(ctx context.Context, p oci.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchPolicies(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
-	identityClient, err := identity.NewIdentityClientWithConfigurationProvider(p.Client)
+	identityClient, err := identity.NewIdentityClientWithConfigurationProvider(p.OciClient)
 	if err != nil {
 		return resources, err
 	}
 
-	tenancyOCID, err := p.Client.TenancyOCID()
+	tenancyOCID, err := p.OciClient.TenancyOCID()
 	if err != nil {
 		return resources, err
 	}
@@ -58,7 +58,7 @@ func FetchPolicies(ctx context.Context, p oci.Provider, teamId primitive.ObjectI
 			})
 		}
 
-		region, err := p.Client.Region()
+		region, err := p.OciClient.Region()
 		if err != nil {
 			return resources, err
 		}

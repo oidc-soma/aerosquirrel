@@ -20,19 +20,19 @@ package core
 import (
 	"context"
 	"github.com/oidc-soma/aerosquirrel/server/models"
-	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // FetchIngress fetches ingress from Kubernetes.
-func FetchIngress(ctx context.Context, p k8s.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
+func FetchIngress(ctx context.Context, p providers.Provider, teamId primitive.ObjectID) ([]*models.Resource, error) {
 	resources := make([]*models.Resource, 0)
 
 	var config v1.ListOptions
 
 	for {
-		res, err := p.Client.NetworkingV1().Ingresses("").List(ctx, config)
+		res, err := p.K8sClient.NetworkingV1().Ingresses("").List(ctx, config)
 		if err != nil {
 			return nil, err
 		}

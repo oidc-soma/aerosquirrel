@@ -24,6 +24,7 @@ import (
 	"github.com/gin-gonic/gin"
 	database "github.com/oidc-soma/aerosquirrel/server/database/mongo"
 	"github.com/oidc-soma/aerosquirrel/server/models"
+	"github.com/oidc-soma/aerosquirrel/server/providers"
 	"github.com/oidc-soma/aerosquirrel/server/providers/aws"
 	"github.com/oidc-soma/aerosquirrel/server/providers/k8s"
 	"github.com/oidc-soma/aerosquirrel/server/providers/oci"
@@ -250,7 +251,7 @@ func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 	}
 
 	if len(config.AWS) > 0 {
-		awsProviders := make([]aws.Provider, 0)
+		awsProviders := make([]providers.Provider, 0)
 		for _, account := range config.AWS {
 			if account.Source == "CREDENTIALS_FILE" {
 				if len(account.Path) > 0 {
@@ -261,8 +262,8 @@ func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 						return
 					}
-					awsProviders = append(awsProviders, aws.Provider{
-						Client: &cfg,
+					awsProviders = append(awsProviders, providers.Provider{
+						AWSClient: &cfg,
 					})
 				} else {
 					cfg, err := awsConfig.LoadDefaultConfig(context.Background(), awsConfig.WithSharedConfigProfile(account.Profile))
@@ -270,8 +271,8 @@ func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 						return
 					}
-					awsProviders = append(awsProviders, aws.Provider{
-						Client: &cfg,
+					awsProviders = append(awsProviders, providers.Provider{
+						AWSClient: &cfg,
 					})
 				}
 			} else if account.Source == "ENVIRONMENT_VARIABLES" {
@@ -279,25 +280,25 @@ func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 				if err != nil {
 					log.Fatal(err)
 				}
-				awsProviders = append(awsProviders, aws.Provider{
-					Client: &cfg,
+				awsProviders = append(awsProviders, providers.Provider{
+					AWSClient: &cfg,
 				})
 			}
 		}
 		resources, err = aws.FetchResources(awsProviders, team.Id)
 	} else if len(config.OCI) > 0 {
-		ociProviders := make([]oci.Provider, 0)
+		ociProviders := make([]providers.Provider, 0)
 		for _, account := range config.OCI {
 			if account.Source == "CREDENTIALS_FILE" {
 				client := common.DefaultConfigProvider()
-				ociProviders = append(ociProviders, oci.Provider{
-					Client: client,
+				ociProviders = append(ociProviders, providers.Provider{
+					OciClient: client,
 				})
 			}
 		}
 		resources, err = oci.FetchResources(ociProviders, team.Id)
 	} else if len(config.Kubernetes) > 0 {
-		k8sProviders := make([]k8s.Provider, 0)
+		k8sProviders := make([]providers.Provider, 0)
 		for _, account := range config.Kubernetes {
 			kubeConfig, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
 				&clientcmd.ClientConfigLoadingRules{ExplicitPath: account.Path},
@@ -311,8 +312,8 @@ func (h *ApiHandler) ImportCSPResources(c *gin.Context) {
 				log.Fatal(err)
 			}
 
-			k8sProviders = append(k8sProviders, k8s.Provider{
-				Client: client,
+			k8sProviders = append(k8sProviders, providers.Provider{
+				K8sClient: client,
 			})
 		}
 		resources, err = k8s.FetchResources(k8sProviders, team.Id)
